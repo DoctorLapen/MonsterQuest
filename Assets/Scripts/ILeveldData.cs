@@ -1,6 +1,6 @@
 ﻿namespace MonsterQuest
 {
-    public interface ILevelFieldData
+    public interface ILeveldData
     {
         Cell[,] Field { get; }
     }

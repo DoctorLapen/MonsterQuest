@@ -1,0 +1,9 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
+    <ui:VisualElement style="height: 74px;">
+        <uie:IntegerField label="Width of Field" value="0" name="WidthOfField" />
+        <uie:IntegerField label="Height of Field" value="0" name="HeightOfField" />
+        <ui:Button text="CreateLevel" display-tooltip-when-elided="true" enable-rich-text="true" name="CreateButton" style="width: 188.6667px;" />
+    </ui:VisualElement>
+    <ui:VisualElement name="LevelGrid" style="height: auto;" />
+    <ui:Button text="Save Level" display-tooltip-when-elided="true" name="SaveButton" />
+</ui:UXML>

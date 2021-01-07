@@ -3,10 +3,8 @@
 namespace MonsterQuest
 {
     [Serializable]
-    public class Cell
+    public class CellList:SerializableList<Cell>
     {
         
     }
-
-
 }

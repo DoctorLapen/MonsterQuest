@@ -5,24 +5,24 @@ namespace MonsterQuest
     public class FieldModel
     {
         private Cell[,] _field;
-        private ILevelFieldData _levelFieldData;
+        private ILeveldData _leveldData;
 
-        public FieldModel(ILevelFieldData levelFieldData)
+        public FieldModel(ILeveldData leveldData)
         {
-            _levelFieldData = levelFieldData;
+            _leveldData = leveldData;
             InitializeField();
         }
         
         private void InitializeField()
         {
-            int rows = _levelFieldData.Field.GetLength(1);
-            int columns = _levelFieldData.Field.GetLength(0);
+            int rows = _leveldData.Field.GetLength(1);
+            int columns = _leveldData.Field.GetLength(0);
             _field = new Cell[ columns, rows];
             for (int column = 0; column < columns; column++)
             {
                 for (int row = 0; row < rows; row++)
                 {
-                    _field[column, row] = _levelFieldData.Field[column, row];
+                    _field[column, row] = _leveldData.Field[column, row];
                 }
             }
         }
