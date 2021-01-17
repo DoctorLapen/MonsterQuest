@@ -1,31 +1,47 @@
 ﻿
 
+using System;
+
 namespace MonsterQuest
 {
-    public class FieldModel
+    public class FieldModel : IFieldModel
     {
+        public event Action<CellChangedArgs> CellChanged; 
         private Cell[,] _field;
-        private ILeveldData _leveldData;
+        private ILeveldData _levelData;
+        private int _fieldColumns;
+        private int _fieldRows;
 
-        public FieldModel(ILeveldData leveldData)
+        public FieldModel(ILeveldData levelData)
         {
-            _leveldData = leveldData;
-            InitializeField();
+            _levelData = levelData;
+            _field = levelData.Field;
+            _fieldColumns = levelData.Field.GetLength(0);
+            _fieldRows = levelData.Field.GetLength(1);
         }
-        
-        private void InitializeField()
+
+        public void InitializeField()
         {
-            int rows = _leveldData.Field.GetLength(1);
-            int columns = _leveldData.Field.GetLength(0);
-            _field = new Cell[ columns, rows];
-            for (int column = 0; column < columns; column++)
+            for (int column = 0; column < _fieldColumns ; column++)
             {
-                for (int row = 0; row < rows; row++)
+                for (int row = 0; row < _fieldRows; row++)
                 {
-                    _field[column, row] = _leveldData.Field[column, row];
+                    SendCellInfo(column, row);
                 }
+                
             }
         }
 
+        private void SendCellInfo(int column, int row)
+        {
+            Cell cell = _field[column, row];
+            if (cell != null)
+            {
+                CellChangedArgs eventArgs = new CellChangedArgs();
+                eventArgs.column = column;
+                eventArgs.row = row;
+                CellChanged?.Invoke(eventArgs);
+            }
+        }
     }
 }
