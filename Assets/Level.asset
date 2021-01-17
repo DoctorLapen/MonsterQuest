@@ -13,6 +13,23 @@ MonoBehaviour:
   m_Name: Level
   m_EditorClassIdentifier: 
   serializableField:
-  - list: []
-  - list: []
-  - list: []
+  - list:
+    - _isEmpty: 0
+    - _isEmpty: 0
+    - _isEmpty: 1
+    - _isEmpty: 1
+  - list:
+    - _isEmpty: 0
+    - _isEmpty: 0
+    - _isEmpty: 0
+    - _isEmpty: 1
+  - list:
+    - _isEmpty: 0
+    - _isEmpty: 0
+    - _isEmpty: 0
+    - _isEmpty: 1
+  - list:
+    - _isEmpty: 0
+    - _isEmpty: 0
+    - _isEmpty: 1
+    - _isEmpty: 1

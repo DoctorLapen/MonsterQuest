@@ -4,7 +4,6 @@ using UnityEngine;
 
 namespace MonsterQuest
 {
-    [Serializable]
     public class LevelData :ScriptableObject, ILeveldData
     {
         public List<CellList> serializableField = new List<CellList>();
@@ -13,6 +12,7 @@ namespace MonsterQuest
         private void OnEnable()
         {
             int columns = serializableField.Count;
+            Debug.Log(serializableField.Count);
             int rows = serializableField[0].list.Count;
             Field = new Cell[columns, rows];
             for (int column = 0; column < columns ; column++)

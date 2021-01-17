@@ -108,19 +108,23 @@ namespace MonsterQuest.Editor
 
         private void FillSerializableField(LevelData levelData)
         {
-            for (int row = 0; row < _heightOfField.value; row++)
+            for (int column = 0; column < _widthOfField.value; column++)
             {
                 levelData.serializableField.Add(new CellList());
-                for (int column = 0; column < _widthOfField.value; column++)
+                for (int row = 0; row < _heightOfField.value; row++)
                 {
-                    CellData cellData = _levelCells[column, row];
-                    Cell cell = null;
+                    CellData cellData = _levelCells[column,row];
+                    Cell cell = new Cell();
                     if (cellData.isSelected)
                     {
-                        cell = new Cell();
+                        cell = new Cell(false);
+                    }
+                    else
+                    {
+                        cell = new Cell(true);
                     }
 
-                    levelData.serializableField[row].list.Add(cell);
+                    levelData.serializableField[column].list.Add(cell);
                 }
             }
         }

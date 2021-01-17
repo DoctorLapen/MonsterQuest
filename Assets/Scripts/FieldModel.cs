@@ -1,6 +1,7 @@
 ﻿
 
 using System;
+using UnityEngine;
 
 namespace MonsterQuest
 {
@@ -26,20 +27,21 @@ namespace MonsterQuest
             {
                 for (int row = 0; row < _fieldRows; row++)
                 {
-                    SendCellInfo(column, row);
+                    SendCellInfo(column, row,ChangeType.Initialize);
                 }
                 
             }
         }
 
-        private void SendCellInfo(int column, int row)
+        private void SendCellInfo(int column, int row,ChangeType changeType)
         {
             Cell cell = _field[column, row];
-            if (cell != null)
+            if (!cell.IsEmpty)
             {
                 CellChangedArgs eventArgs = new CellChangedArgs();
                 eventArgs.column = column;
                 eventArgs.row = row;
+                eventArgs.changeType = changeType;
                 CellChanged?.Invoke(eventArgs);
             }
         }

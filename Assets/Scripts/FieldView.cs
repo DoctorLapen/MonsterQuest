@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace MonsterQuest
 {
-    public class FieldView : MonoBehaviour
+    public class FieldView : MonoBehaviour, IFieldView
     {
         [SerializeField]
         private RectTransform _backgroundCell;
@@ -14,36 +14,33 @@ namespace MonsterQuest
         [SerializeField]
         private int _offsetBetweenCells;
 
+       
+
         
-        
+
         
         private Vector3 _startPosition;
+
+
         
-
-        
-
-      
-
-
 
         private void Start()
         {
             _startPosition = _startPoint.anchoredPosition;
-            SpawnBackgroundCells();
         }
 
-        private void SpawnBackgroundCells()
+        public void SpawnBackgroundCell(int column,int row)
         {
-            for (int column = 0; column < 10; column++)
-            {
-                for (int row = 0; row < 10; row++)
-                {
-                    RectTransform cell = Instantiate(_backgroundCell, _startPoint.position, Quaternion.identity, transform);
-                    cell.anchoredPosition = CalculateCellPosition(column, row);
-                }
-            }
+            RectTransform cell = Instantiate(_backgroundCell, _startPoint.position, Quaternion.identity, transform);
+            cell.anchoredPosition = CalculateCellPosition(column, row);
         }
+        public void SpawnElement(int column,int row)
+        {
+            
+        }
+    
 
+        
         private Vector3 CalculateCellPosition(int column, int row)
         {
             Vector3 newPosition =  _startPosition;
