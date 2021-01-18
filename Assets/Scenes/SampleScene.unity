@@ -303,7 +303,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _backgroundCell: {fileID: 3894623365558661209, guid: 703d527739b3e3a4ea37c1a8cec14a59, type: 3}
   _startPoint: {fileID: 818102259}
-  _offsetBetweenCells: 30
+  _offsetBetweenCells: 10
+  _cellSize: 100
 --- !u!114 &712142198
 MonoBehaviour:
   m_ObjectHideFlags: 0
