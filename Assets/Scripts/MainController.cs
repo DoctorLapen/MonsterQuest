@@ -24,10 +24,8 @@ namespace MonsterQuest
             {
                 _fieldView.SpawnBackgroundCell(eventArgs.column,eventArgs.row);
             }
-            else
-            {
-                _fieldView.SpawnElement(eventArgs.column,eventArgs.row);
-            }
+            _fieldView.SpawnElement(eventArgs.column,eventArgs.row, eventArgs.element);
+            
         }
     }
 }

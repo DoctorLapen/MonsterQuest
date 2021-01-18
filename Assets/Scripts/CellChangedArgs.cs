@@ -5,6 +5,7 @@
         public int column;
         public int row;
         public ChangeType changeType;
+        public Element element;
 
     }
 

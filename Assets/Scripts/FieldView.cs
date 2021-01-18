@@ -1,10 +1,15 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.UI;
+using Zenject;
 
 namespace MonsterQuest
 {
     public class FieldView : MonoBehaviour, IFieldView
     {
+        [Inject]
+        private IElementsViewSettings _elementsViewSettings;
+        
         [SerializeField]
         private RectTransform _backgroundCell;
 
@@ -14,10 +19,7 @@ namespace MonsterQuest
         [SerializeField]
         private int _offsetBetweenCells;
 
-       
-
         
-
         
         private Vector3 _startPosition;
 
@@ -31,16 +33,23 @@ namespace MonsterQuest
 
         public void SpawnBackgroundCell(int column,int row)
         {
-            RectTransform cell = Instantiate(_backgroundCell, _startPoint.position, Quaternion.identity, transform);
-            cell.anchoredPosition = CalculateCellPosition(column, row);
+            SpawnVisualElement( column,  row, _backgroundCell);
         }
-        public void SpawnElement(int column,int row)
+        public void SpawnElement(int column, int row, Element element)
+        {
+           Image el =  _elementsViewSettings.ElementsImages[element];
+           SpawnVisualElement(column, row, el.rectTransform);
+        }
+
+        private void SpawnVisualElement (int column,int row,RectTransform prefab)
         {
             
+            RectTransform cell = Instantiate(prefab, _startPoint.position, Quaternion.identity, transform);
+            cell.anchoredPosition = CalculateCellPosition(column, row);
         }
-    
 
-        
+
+
         private Vector3 CalculateCellPosition(int column, int row)
         {
             Vector3 newPosition =  _startPosition;

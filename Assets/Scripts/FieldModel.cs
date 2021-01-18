@@ -2,6 +2,7 @@
 
 using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace MonsterQuest
 {
@@ -27,13 +28,21 @@ namespace MonsterQuest
             {
                 for (int row = 0; row < _fieldRows; row++)
                 {
-                    SendCellInfo(column, row,ChangeType.Initialize);
+                    Cell cell = _field[column, row];
+                    cell.element = SelectRandomElement();
+                    SendCellInfo(column, row,cell.element,ChangeType.Initialize);
                 }
                 
             }
         }
 
-        private void SendCellInfo(int column, int row,ChangeType changeType)
+        private Element SelectRandomElement()
+        {
+            return (Element)Random.Range(0, 4);
+           
+        }
+
+        private void SendCellInfo(int column, int row,Element element,ChangeType changeType)
         {
             Cell cell = _field[column, row];
             if (!cell.IsEmpty)
@@ -42,6 +51,7 @@ namespace MonsterQuest
                 eventArgs.column = column;
                 eventArgs.row = row;
                 eventArgs.changeType = changeType;
+                eventArgs.element = element;
                 CellChanged?.Invoke(eventArgs);
             }
         }

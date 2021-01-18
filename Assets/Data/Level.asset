@@ -15,21 +15,37 @@ MonoBehaviour:
   serializableField:
   - list:
     - _isEmpty: 0
+      element: 0
     - _isEmpty: 0
-    - _isEmpty: 1
-    - _isEmpty: 1
+      element: 0
+    - _isEmpty: 0
+      element: 0
+    - _isEmpty: 0
+      element: 0
   - list:
     - _isEmpty: 0
+      element: 0
     - _isEmpty: 0
+      element: 0
     - _isEmpty: 0
-    - _isEmpty: 1
+      element: 0
+    - _isEmpty: 0
+      element: 0
   - list:
     - _isEmpty: 0
+      element: 0
     - _isEmpty: 0
+      element: 0
     - _isEmpty: 0
-    - _isEmpty: 1
+      element: 0
+    - _isEmpty: 0
+      element: 0
   - list:
     - _isEmpty: 0
+      element: 0
     - _isEmpty: 0
-    - _isEmpty: 1
-    - _isEmpty: 1
+      element: 0
+    - _isEmpty: 0
+      element: 0
+    - _isEmpty: 0
+      element: 0

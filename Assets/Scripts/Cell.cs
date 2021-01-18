@@ -9,6 +9,8 @@ namespace MonsterQuest
         public bool IsEmpty => _isEmpty;
         [SerializeField]
         private bool _isEmpty;
+
+        public Element element;
         public Cell()
         {
             
