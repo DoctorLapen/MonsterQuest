@@ -18,6 +18,8 @@ namespace MonsterQuest
 
         [SerializeField]
         private int _offsetBetweenCells;
+        [SerializeField]
+        private float _cellSize;
 
         
         
@@ -45,6 +47,7 @@ namespace MonsterQuest
         {
             
             RectTransform cell = Instantiate(prefab, _startPoint.position, Quaternion.identity, transform);
+            cell.sizeDelta = new Vector2(_cellSize, _cellSize);
             cell.anchoredPosition = CalculateCellPosition(column, row);
         }
 
@@ -57,6 +60,10 @@ namespace MonsterQuest
             newPosition.y -= ( _backgroundCell.sizeDelta.y + _offsetBetweenCells) * row;
             return newPosition;
         }
+       
         
+       
+
+
     }
 }
