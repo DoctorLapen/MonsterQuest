@@ -25,7 +25,8 @@ namespace MonsterQuest
 
         public void InitializeField()
         {
-            List<Element> previusElements = new List<Element>();
+            List<Element> columnPreviusElements = new List<Element>();
+            List<Element> rowPreviusElements = new List<Element>();
             for (int column = 0; column < _fieldColumns ; column++)
             {
                 for (int row = 0; row < _fieldRows; row++)
@@ -38,23 +39,23 @@ namespace MonsterQuest
                         
                         if (column > 1 && row > 1)
                         { 
-                            previusElements.Add(_field[column - 2,row].element);
-                            previusElements.Add(_field[column - 1,row].element);
-                            previusElements.Add(_field[column ,row - 2].element);
-                            previusElements.Add(_field[column ,row - 1].element);
-                            currentElement = SelectSuitableElement(previusElements);
+                            columnPreviusElements.Add(_field[column - 2,row].element);
+                            columnPreviusElements.Add(_field[column - 1,row].element);
+                            rowPreviusElements.Add(_field[column ,row - 2].element);
+                            rowPreviusElements.Add(_field[column ,row - 1].element);
+                            currentElement = SelectSuitableElement(columnPreviusElements,rowPreviusElements );
                         }
                         else if (column > 1 )
                         {
-                            previusElements.Add(_field[column - 2,row].element);
-                            previusElements.Add(_field[column - 1,row].element);
-                            currentElement = SelectSuitableElement(previusElements);
+                            columnPreviusElements.Add(_field[column - 2,row].element);
+                            columnPreviusElements.Add(_field[column - 1,row].element);
+                            currentElement = SelectSuitableElement(columnPreviusElements,rowPreviusElements );
                         }
                         else if (row > 1)
                         {
-                            previusElements.Add(_field[column ,row - 2].element);
-                            previusElements.Add(_field[column ,row - 1].element);
-                            currentElement = SelectSuitableElement(previusElements);
+                            rowPreviusElements.Add(_field[column ,row - 2].element);
+                            rowPreviusElements.Add(_field[column ,row - 1].element);
+                            currentElement = SelectSuitableElement(columnPreviusElements,rowPreviusElements );
                         }
                         else
                         {
@@ -69,24 +70,40 @@ namespace MonsterQuest
             }
         }
 
-        private Element SelectSuitableElement(List<Element> previusElements)
+        private Element SelectSuitableElement(List<Element> columnPreviusElements,List<Element> rowPreviusElements)
         {
             Element currentElement = Element.Yellow;
-            for (int i = 0; i < 15; i++)
+
+            for (int i = 0; i < 50; i++)
             {
                 currentElement = SelectRandomElement();
-                bool isSuitableElement = false;
-                foreach (var previusElement in previusElements)
+                bool isSuitableElementColumn = true;
+                bool isSuitableElementRow = true;
+                if (columnPreviusElements.Count > 0)
                 {
-                    isSuitableElement = currentElement != previusElement;
+                    foreach (var previusElement in columnPreviusElements)
+                    {
+                        isSuitableElementColumn = currentElement != previusElement;
+                    }
                 }
 
-                if (isSuitableElement)
+                if (rowPreviusElements.Count > 0)
+                {
+                    foreach (var previusElement in rowPreviusElements)
+                    {
+                        isSuitableElementRow = currentElement != previusElement;
+                    }
+                }
+
+                if (isSuitableElementColumn && isSuitableElementRow)
                 {
                     break;
                 }
             }
-            previusElements.Clear();
+            
+            
+            columnPreviusElements.Clear();
+            rowPreviusElements.Clear();
             Debug.Log(currentElement);
             return currentElement;
         }
