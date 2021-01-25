@@ -171,11 +171,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d0979f089324dbb94785374291dfb4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _minDistanceForSwipe: 0
-  _actionsPerSwipe: 0
+  _minDistanceForSwipe: 20
   _tagToCompare: GameElement
-  m_Raycaster: {fileID: 1805063070}
-  m_EventSystem: {fileID: 2037715258}
+  _raycaster: {fileID: 1805063070}
+  _eventSystem: {fileID: 2037715258}
 --- !u!4 &95615525
 Transform:
   m_ObjectHideFlags: 0

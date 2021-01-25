@@ -43,7 +43,7 @@ namespace MonsterQuest
            RectTransform cell = Instantiate(el.rectTransform, _startPoint.position, Quaternion.identity, transform);
            cell.sizeDelta = new Vector2(_cellSize, _cellSize);
            cell.anchoredPosition = CalculateCellPosition(column, row);
-           cell.gameObject.GetComponent<CellCoordinate>().Initialize(new Vector2Int(column,row));
+           cell.gameObject.GetComponent<CellCoordinate>().Initialize(new UnityEngine.Vector2Int(column,row));
         }
 
         private void SpawnVisualElement (int column,int row,RectTransform prefab)

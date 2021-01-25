@@ -23,7 +23,12 @@ namespace MonsterQuest
 
         private void Update()
         {
-            _inputController.DetectAction();
+            ActionData action = _inputController.DetectAction();
+            if (action.isActionHappened)
+            {
+                Debug.Log(action.elementToMoveCoordinates);
+                Debug.Log(action.moveDirection);
+            }
         }
 
         private void OnCellChanged(CellChangedArgs eventArgs)
