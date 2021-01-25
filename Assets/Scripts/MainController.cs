@@ -12,10 +12,18 @@ namespace MonsterQuest
         [Inject]
         private IFieldView _fieldView;
 
+        [Inject]
+        private IInputController _inputController;
+
         private void Start()
         {
             _fieldModel.CellChanged += OnCellChanged;
             _fieldModel.InitializeField();
+        }
+
+        private void Update()
+        {
+            _inputController.DetectAction();
         }
 
         private void OnCellChanged(CellChangedArgs eventArgs)

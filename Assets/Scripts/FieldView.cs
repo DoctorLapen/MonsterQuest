@@ -39,8 +39,11 @@ namespace MonsterQuest
         }
         public void SpawnElement(int column, int row, Element element)
         {
-           Image el =  _elementsViewSettings.ElementsImages[element];
-           SpawnVisualElement(column, row, el.rectTransform);
+           Image el = _elementsViewSettings.ElementsImages[element];
+           RectTransform cell = Instantiate(el.rectTransform, _startPoint.position, Quaternion.identity, transform);
+           cell.sizeDelta = new Vector2(_cellSize, _cellSize);
+           cell.anchoredPosition = CalculateCellPosition(column, row);
+           cell.gameObject.GetComponent<CellCoordinate>().Initialize(new Vector2Int(column,row));
         }
 
         private void SpawnVisualElement (int column,int row,RectTransform prefab)
