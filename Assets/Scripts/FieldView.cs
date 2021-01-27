@@ -9,6 +9,8 @@ namespace MonsterQuest
     {
         [Inject]
         private IElementsViewSettings _elementsViewSettings;
+        [Inject]
+        private ILeveldData _levelData;
         
         [SerializeField]
         private RectTransform _backgroundCell;
@@ -25,11 +27,16 @@ namespace MonsterQuest
         
         private Vector3 _startPosition;
 
+        private RectTransform[,] _elements;
+
 
         
 
         private void Start()
         {
+            int columns = _levelData.Field.GetLength(0);
+            int rows = _levelData.Field.GetLength(1);
+            _elements = new RectTransform[columns, rows];
             _startPosition = _startPoint.anchoredPosition;
         }
 
@@ -43,7 +50,7 @@ namespace MonsterQuest
            RectTransform cell = Instantiate(el.rectTransform, _startPoint.position, Quaternion.identity, transform);
            cell.sizeDelta = new Vector2(_cellSize, _cellSize);
            cell.anchoredPosition = CalculateCellPosition(column, row);
-           cell.gameObject.GetComponent<CellCoordinate>().Initialize(new UnityEngine.Vector2Int(column,row));
+           _elements[column, row] = cell;
         }
 
         private void SpawnVisualElement (int column,int row,RectTransform prefab)
@@ -52,6 +59,21 @@ namespace MonsterQuest
             RectTransform cell = Instantiate(prefab, _startPoint.position, Quaternion.identity, transform);
             cell.sizeDelta = new Vector2(_cellSize, _cellSize);
             cell.anchoredPosition = CalculateCellPosition(column, row);
+            cell.gameObject.GetComponent<CellCoordinate>().Initialize(new Vector2Int(column,row));
+        }
+
+        public void ReplaceVisualElements(int columnA, int rowA, int columnB, int rowB)
+        {
+            RectTransform elementA = _elements[columnA, rowA];
+            RectTransform elementB = _elements[columnB, rowB];
+            Vector2 positionA = elementA.anchoredPosition;
+            Vector2 positionB = elementB.anchoredPosition;
+            elementA.anchoredPosition = positionB;
+            elementB.anchoredPosition = positionA;
+            _elements[columnA, rowA] = elementB;
+            _elements[columnB, rowB] = elementA;
+
+
         }
 
 

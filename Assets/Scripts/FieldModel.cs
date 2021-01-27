@@ -10,6 +10,7 @@ namespace MonsterQuest
     public class FieldModel : IFieldModel
     {
         public event Action<CellChangedArgs> CellChanged; 
+        public event Action<ElementsReplacedArgs> ElementsReplaced; 
         private Cell[,] _field;
         private ILeveldData _levelData;
         private int _fieldColumns;
@@ -70,6 +71,25 @@ namespace MonsterQuest
             }
         }
 
+        public bool IsElementInField(Vector2Int elementCoordinates)
+        {
+            bool isXInField = 0 <= elementCoordinates.x  &&  elementCoordinates.x < _fieldColumns;
+            bool isYInField = 0 <= elementCoordinates.y  &&  elementCoordinates.y < _fieldRows;
+            return isXInField && isYInField;
+        }
+        public void ReplaceElements(Vector2Int coordinatesA,Vector2Int coordinatesB)
+        {
+            Cell elementA = _field[coordinatesA.x, coordinatesA.y];
+            Cell elementB = _field[coordinatesB.x, coordinatesB.y];
+            _field[coordinatesA.x, coordinatesA.y] = elementB ;
+            _field[coordinatesB.x, coordinatesB.y] = elementA;
+            ElementsReplacedArgs args = new ElementsReplacedArgs();
+            args.elementA = coordinatesA;
+            args.elementB = coordinatesB;
+            ElementsReplaced?.Invoke(args);
+
+        }
+
         private Element SelectSuitableElement(List<Element> columnPreviusElements,List<Element> rowPreviusElements)
         {
             Element currentElement = Element.Yellow;
@@ -113,7 +133,8 @@ namespace MonsterQuest
             return (Element)Random.Range(0, 4);
            
         }
-        
+
+       
 
         private void SendCellInfo(int column, int row,Element element,ChangeType changeType)
         {

@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 
 namespace MonsterQuest
 {
@@ -6,5 +7,8 @@ namespace MonsterQuest
     {
         event Action<CellChangedArgs> CellChanged;
         void InitializeField();
+        bool IsElementInField(Vector2Int elementCoordinates);
+        void ReplaceElements(Vector2Int coordinatesA,Vector2Int coordinatesB);
+        event Action<ElementsReplacedArgs> ElementsReplaced;
     }
 }

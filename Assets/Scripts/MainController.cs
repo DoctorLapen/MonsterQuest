@@ -18,7 +18,13 @@ namespace MonsterQuest
         private void Start()
         {
             _fieldModel.CellChanged += OnCellChanged;
+            _fieldModel.ElementsReplaced += OnElementsReplaced;
             _fieldModel.InitializeField();
+        }
+
+        private void OnElementsReplaced(ElementsReplacedArgs args)
+        {
+            _fieldView.ReplaceVisualElements(args.elementA.x,args.elementA.y,args.elementB.x,args.elementB.y);
         }
 
         private void Update()
@@ -28,6 +34,12 @@ namespace MonsterQuest
             {
                 Debug.Log(action.elementToMoveCoordinates);
                 Debug.Log(action.moveDirection);
+                Vector2Int secondElementCoordinates = action.elementToMoveCoordinates + action.moveDirection;
+                Debug.Log(secondElementCoordinates);
+                if (_fieldModel.IsElementInField(secondElementCoordinates))
+                {
+                    _fieldModel.ReplaceElements(action.elementToMoveCoordinates,secondElementCoordinates);
+                }
             }
         }
 

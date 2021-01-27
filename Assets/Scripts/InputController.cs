@@ -51,7 +51,7 @@ namespace MonsterQuest
                     if (results.Count > 0)
                     {
 
-                        RaycastResult result = results[0];
+                        RaycastResult result = results[1];
                         if (result.gameObject.CompareTag(_tagToCompare))
                         {
                             CellCoordinate cellCoordinate = result.gameObject.GetComponent<CellCoordinate>();
