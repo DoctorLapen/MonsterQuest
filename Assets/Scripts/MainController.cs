@@ -24,6 +24,8 @@ namespace MonsterQuest
 
         private void OnElementsReplaced(ElementsReplacedArgs args)
         {
+            Debug.Log(args.elementA);
+            Debug.Log(args.elementB);
             _fieldView.ReplaceVisualElements(args.elementA.x,args.elementA.y,args.elementB.x,args.elementB.y);
         }
 
@@ -33,7 +35,7 @@ namespace MonsterQuest
             if (action.isActionHappened)
             {
                 Debug.Log(action.elementToMoveCoordinates);
-                Debug.Log(action.moveDirection);
+             //   Debug.Log(action.moveDirection);
                 Vector2Int secondElementCoordinates = action.elementToMoveCoordinates + action.moveDirection;
                 Debug.Log(secondElementCoordinates);
                 if (_fieldModel.IsElementInField(secondElementCoordinates))

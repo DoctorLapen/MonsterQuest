@@ -60,18 +60,20 @@ namespace MonsterQuest
             cell.sizeDelta = new Vector2(_cellSize, _cellSize);
             cell.anchoredPosition = CalculateCellPosition(column, row);
             cell.gameObject.GetComponent<CellCoordinate>().Initialize(new Vector2Int(column,row));
+            cell.SetAsFirstSibling();
         }
 
         public void ReplaceVisualElements(int columnA, int rowA, int columnB, int rowB)
         {
-            RectTransform elementA = _elements[columnA, rowA];
-            RectTransform elementB = _elements[columnB, rowB];
+            RectTransform elementA = _elements[columnA,rowA];
             Vector2 positionA = elementA.anchoredPosition;
+            RectTransform elementB = _elements[columnB,rowB];
             Vector2 positionB = elementB.anchoredPosition;
             elementA.anchoredPosition = positionB;
             elementB.anchoredPosition = positionA;
             _elements[columnA, rowA] = elementB;
             _elements[columnB, rowB] = elementA;
+
 
 
         }
