@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 
@@ -34,13 +35,17 @@ namespace MonsterQuest
             ActionData action = _inputController.DetectAction();
             if (action.isActionHappened)
             {
-                Debug.Log(action.elementToMoveCoordinates);
-             //   Debug.Log(action.moveDirection);
+             
                 Vector2Int secondElementCoordinates = action.elementToMoveCoordinates + action.moveDirection;
-                Debug.Log(secondElementCoordinates);
                 if (_fieldModel.IsElementInField(secondElementCoordinates))
                 {
-                    _fieldModel.ReplaceElements(action.elementToMoveCoordinates,secondElementCoordinates);
+                    List<Vector2Int> matchedElements =
+                        _fieldModel.FindHorizontalMatch(action.elementToMoveCoordinates, secondElementCoordinates);
+                    if (matchedElements.Count > 0)
+                    {
+                        _fieldModel.ReplaceElements(action.elementToMoveCoordinates,secondElementCoordinates);
+                    }
+                    
                 }
             }
         }

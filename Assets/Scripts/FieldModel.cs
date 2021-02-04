@@ -15,6 +15,7 @@ namespace MonsterQuest
         private ILeveldData _levelData;
         private int _fieldColumns;
         private int _fieldRows;
+        private const int MIN_MATCHES = 3;
 
         public FieldModel(ILeveldData levelData)
         {
@@ -76,6 +77,46 @@ namespace MonsterQuest
             bool isXInField = 0 <= elementCoordinates.x  &&  elementCoordinates.x < _fieldColumns;
             bool isYInField = 0 <= elementCoordinates.y  &&  elementCoordinates.y < _fieldRows;
             return isXInField && isYInField;
+        }
+        public List<Vector2Int> FindHorizontalMatch(Vector2Int coordinateA,Vector2Int coordinateB)
+        {
+            Cell[,] _testField = new Cell[_fieldColumns, _fieldRows];
+            Array.Copy(_field,_testField,_field.Length);
+            Cell elementA = _testField[coordinateA.x, coordinateA.y];
+            Cell elementB = _testField[coordinateB.x, coordinateB.y];
+            _testField[coordinateA.x, coordinateA.y] = elementB  ;
+            _testField[coordinateB.x, coordinateB.y] = elementA  ;
+            List<Vector2Int> matchedElementsCoordinates = new List<Vector2Int>();
+            List<Vector2Int> checkedElements = new List<Vector2Int>();
+           
+            for (int row = 0; row < _fieldRows; row++)
+            {
+                Element targetElement = _testField[0, row].element;
+                int matches = 0;
+                for (int column = 0; column < _fieldColumns; column++)
+                {
+                    if (_testField[column, row].element == targetElement)
+                    {
+                        matches++;
+                        Vector2Int elementCoordinate = new Vector2Int(column, row);
+                        checkedElements.Add(elementCoordinate);
+                    }
+                    else if(_testField[column, row].element != targetElement || column == _fieldColumns - 1)
+                    {
+                        if (matches >= MIN_MATCHES)
+                        {
+                            matchedElementsCoordinates.AddRange(checkedElements);
+                        }
+
+                        targetElement = _testField[column, row].element;
+                        matches = 0;
+                        checkedElements.Clear();
+                    }
+
+                }
+            }
+
+            return matchedElementsCoordinates;
         }
         public void ReplaceElements(Vector2Int coordinatesA,Vector2Int coordinatesB)
         {
