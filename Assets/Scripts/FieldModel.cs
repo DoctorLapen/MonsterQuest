@@ -78,7 +78,7 @@ namespace MonsterQuest
             bool isYInField = 0 <= elementCoordinates.y  &&  elementCoordinates.y < _fieldRows;
             return isXInField && isYInField;
         }
-        public List<Vector2Int> FindHorizontalMatch(Vector2Int coordinateA,Vector2Int coordinateB)
+        public HashSet<Vector2Int> FindMatchedElements(Vector2Int coordinateA,Vector2Int coordinateB)
         {
             Cell[,] _testField = new Cell[_fieldColumns, _fieldRows];
             Array.Copy(_field,_testField,_field.Length);
@@ -86,38 +86,49 @@ namespace MonsterQuest
             Cell elementB = _testField[coordinateB.x, coordinateB.y];
             _testField[coordinateA.x, coordinateA.y] = elementB  ;
             _testField[coordinateB.x, coordinateB.y] = elementA  ;
-            List<Vector2Int> matchedElementsCoordinates = new List<Vector2Int>();
-            List<Vector2Int> checkedElements = new List<Vector2Int>();
-           
-            for (int row = 0; row < _fieldRows; row++)
+            var matchedHorizontalElements = FindMatchesByDirection(_fieldRows,_fieldColumns,(j,i)=> _testField[j,i].element);
+            var matchedVerticalElements = FindMatchesByDirection(_fieldColumns,_fieldRows,(j,i)=> _testField[i,j].element);
+            matchedHorizontalElements.UnionWith(matchedVerticalElements);
+            return matchedHorizontalElements;
+        }
+
+        private static HashSet<Vector2Int> FindMatchesByDirection(int iAmount,int jAmount,Func<int,int,Element> getElement)
+        {
+            HashSet<Vector2Int> matchedElementsCoordinates = new HashSet<Vector2Int>();
+            HashSet<Vector2Int> checkedElements = new HashSet<Vector2Int>();
+
+            for (int i = 0; i < iAmount; i++)
             {
-                Element targetElement = _testField[0, row].element;
+                Element targetElement = getElement(0,i);
                 int matches = 0;
-                for (int column = 0; column < _fieldColumns; column++)
+                for (int j = 0; j < jAmount; j++)
                 {
-                    if (_testField[column, row].element == targetElement)
+                    if (getElement(j,i) == targetElement)
                     {
                         matches++;
-                        Vector2Int elementCoordinate = new Vector2Int(column, row);
+                        Vector2Int elementCoordinate = new Vector2Int(j, i);
                         checkedElements.Add(elementCoordinate);
                     }
-                    else if(_testField[column, row].element != targetElement || column == _fieldColumns - 1)
+                    else if (getElement(j,i) != targetElement || j == jAmount - 1)
                     {
                         if (matches >= MIN_MATCHES)
                         {
-                            matchedElementsCoordinates.AddRange(checkedElements);
+                            foreach (Vector2Int element in checkedElements)
+                            {
+                                matchedElementsCoordinates.Add(element);
+                            }
                         }
 
-                        targetElement = _testField[column, row].element;
-                        matches = 0;
+                        targetElement = getElement(j,i);
+                        matches = 1;
                         checkedElements.Clear();
                     }
-
                 }
             }
 
             return matchedElementsCoordinates;
         }
+
         public void ReplaceElements(Vector2Int coordinatesA,Vector2Int coordinatesB)
         {
             Cell elementA = _field[coordinatesA.x, coordinatesA.y];

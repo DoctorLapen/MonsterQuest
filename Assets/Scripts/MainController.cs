@@ -39,8 +39,8 @@ namespace MonsterQuest
                 Vector2Int secondElementCoordinates = action.elementToMoveCoordinates + action.moveDirection;
                 if (_fieldModel.IsElementInField(secondElementCoordinates))
                 {
-                    List<Vector2Int> matchedElements =
-                        _fieldModel.FindHorizontalMatch(action.elementToMoveCoordinates, secondElementCoordinates);
+                    HashSet<Vector2Int> matchedElements =
+                        _fieldModel.FindMatchedElements(action.elementToMoveCoordinates, secondElementCoordinates);
                     if (matchedElements.Count > 0)
                     {
                         _fieldModel.ReplaceElements(action.elementToMoveCoordinates,secondElementCoordinates);
