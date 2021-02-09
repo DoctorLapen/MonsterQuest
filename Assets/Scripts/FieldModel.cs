@@ -87,13 +87,15 @@ namespace MonsterQuest
             Cell elementB = _testField[coordinateB.x, coordinateB.y];
             _testField[coordinateA.x, coordinateA.y] = elementB  ;
             _testField[coordinateB.x, coordinateB.y] = elementA  ;
-            var matchedHorizontalElements = FindMatchesByDirection(_fieldRows,_fieldColumns,(j,i)=> _testField[j,i].element);
-            var matchedVerticalElements = FindMatchesByDirection(_fieldColumns,_fieldRows,(j,i)=> _testField[i,j].element);
+            var matchedHorizontalElements =
+                FindMatchesByDirection(_fieldRows,_fieldColumns,(j,i)=> _testField[j,i].element,(j,i)=>new Vector2Int(j,i));
+            var matchedVerticalElements =
+                FindMatchesByDirection(_fieldColumns,_fieldRows,(j,i)=> _testField[i,j].element,(j,i)=>new Vector2Int(i,j));
             matchedHorizontalElements.UnionWith(matchedVerticalElements);
             return matchedHorizontalElements;
         }
 
-        private static HashSet<Vector2Int> FindMatchesByDirection(int iAmount,int jAmount,Func<int,int,Element> getElement)
+        private static HashSet<Vector2Int> FindMatchesByDirection(int iAmount,int jAmount,Func<int,int,Element> getElement,Func<int,int,Vector2Int> createCoordinate)
         {
             HashSet<Vector2Int> matchedElementsCoordinates = new HashSet<Vector2Int>();
             HashSet<Vector2Int> checkedElements = new HashSet<Vector2Int>();
@@ -102,15 +104,18 @@ namespace MonsterQuest
             {
                 Element targetElement = getElement(0,i);
                 int matches = 0;
+                checkedElements.Clear();
                 for (int j = 0; j < jAmount; j++)
                 {
+                    
                     if (getElement(j,i) == targetElement)
                     {
                         matches++;
-                        Vector2Int elementCoordinate = new Vector2Int(j, i);
+                        Vector2Int elementCoordinate = createCoordinate(j, i);
                         checkedElements.Add(elementCoordinate);
+                        
                     }
-                    else if (getElement(j,i) != targetElement || j == jAmount - 1)
+                    if (getElement(j,i) != targetElement || j == jAmount - 1)
                     {
                         if (matches >= MIN_MATCHES)
                         {
@@ -123,6 +128,7 @@ namespace MonsterQuest
                         targetElement = getElement(j,i);
                         matches = 1;
                         checkedElements.Clear();
+                        checkedElements.Add(createCoordinate(j, i));
                     }
                 }
             }
@@ -186,7 +192,6 @@ namespace MonsterQuest
             
             columnPreviusElements.Clear();
             rowPreviusElements.Clear();
-            Debug.Log(currentElement);
             return currentElement;
         }
 
