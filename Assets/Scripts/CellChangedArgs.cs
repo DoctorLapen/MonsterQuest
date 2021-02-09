@@ -12,6 +12,6 @@
     public enum ChangeType
     {
         Initialize,
-        InGame,
+        Delete,
     }
 }

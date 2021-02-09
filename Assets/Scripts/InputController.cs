@@ -48,7 +48,7 @@ namespace MonsterQuest
                     List<RaycastResult> results = new List<RaycastResult>();
                     
                     _raycaster.Raycast(_pointerEventData, results);
-                    if (results.Count > 0)
+                    if (results.Count > 1)
                     {
 
                         RaycastResult result = results[1];

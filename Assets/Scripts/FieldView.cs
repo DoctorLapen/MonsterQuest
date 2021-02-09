@@ -78,6 +78,10 @@ namespace MonsterQuest
 
         }
 
+        public void DeleteElement(int column, int row)
+        {
+            Destroy(_elements[column, row].gameObject);
+        }
 
 
         private Vector3 CalculateCellPosition(int column, int row)

@@ -12,5 +12,6 @@ namespace MonsterQuest
         void ReplaceElements(Vector2Int coordinatesA,Vector2Int coordinatesB);
         event Action<ElementsReplacedArgs> ElementsReplaced;
         HashSet<Vector2Int> FindMatchedElements(Vector2Int coordinateA,Vector2Int coordinateB);
+        void DeleteElements(IEnumerable<Vector2Int> elementsCoordinates);
     }
 }

@@ -25,8 +25,6 @@ namespace MonsterQuest
 
         private void OnElementsReplaced(ElementsReplacedArgs args)
         {
-            Debug.Log(args.elementA);
-            Debug.Log(args.elementB);
             _fieldView.ReplaceVisualElements(args.elementA.x,args.elementA.y,args.elementB.x,args.elementB.y);
         }
 
@@ -39,11 +37,16 @@ namespace MonsterQuest
                 Vector2Int secondElementCoordinates = action.elementToMoveCoordinates + action.moveDirection;
                 if (_fieldModel.IsElementInField(secondElementCoordinates))
                 {
+                   
                     HashSet<Vector2Int> matchedElements =
                         _fieldModel.FindMatchedElements(action.elementToMoveCoordinates, secondElementCoordinates);
+                    Debug.Log(action.elementToMoveCoordinates);
+                    Debug.Log(secondElementCoordinates);
+                    Debug.Log(matchedElements.Count);
                     if (matchedElements.Count > 0)
                     {
                         _fieldModel.ReplaceElements(action.elementToMoveCoordinates,secondElementCoordinates);
+                        _fieldModel.DeleteElements(matchedElements);
                     }
                     
                 }
@@ -55,9 +58,13 @@ namespace MonsterQuest
             if (eventArgs.changeType == ChangeType.Initialize)
             {
                 _fieldView.SpawnBackgroundCell(eventArgs.column,eventArgs.row);
+                _fieldView.SpawnElement(eventArgs.column,eventArgs.row, eventArgs.element);
             }
-            _fieldView.SpawnElement(eventArgs.column,eventArgs.row, eventArgs.element);
-            
+            else  if(eventArgs.changeType == ChangeType.Delete)
+            {
+                _fieldView.DeleteElement(eventArgs.column,eventArgs.row);
+            }
+
         }
     }
 }

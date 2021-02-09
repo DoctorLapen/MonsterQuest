@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
+using Vector2 = System.Numerics.Vector2;
 
 namespace MonsterQuest
 {
@@ -34,7 +35,7 @@ namespace MonsterQuest
                 for (int row = 0; row < _fieldRows; row++)
                 {
                     Cell cell = _field[column, row];
-                    if (!cell.IsEmpty)
+                    if (!cell.IsExist)
                     {
                         
                         Element currentElement = Element.Yellow;
@@ -140,6 +141,15 @@ namespace MonsterQuest
             args.elementB = coordinatesB;
             ElementsReplaced?.Invoke(args);
 
+        }
+
+        public void DeleteElements(IEnumerable<Vector2Int> elementsCoordinates)
+        {
+            foreach (Vector2Int coordinate in elementsCoordinates)
+            {
+                _field[coordinate.x, coordinate.y].isEmpty = true;
+                SendCellInfo(coordinate.x, coordinate.y, Element.Yellow, ChangeType.Delete);
+            }
         }
 
         private Element SelectSuitableElement(List<Element> columnPreviusElements,List<Element> rowPreviusElements)

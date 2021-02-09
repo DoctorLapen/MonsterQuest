@@ -6,18 +6,20 @@ namespace MonsterQuest
     [Serializable]
     public class Cell
     {
-        public bool IsEmpty => _isEmpty;
+        public bool IsExist => _isExist;
         [SerializeField]
-        private bool _isEmpty;
+        private bool _isExist;
 
         public Element element;
+        public bool isEmpty;
         public Cell()
         {
             
         }
-        public Cell(bool isEmpty)
+        public Cell(bool isExist)
         {
-            _isEmpty = isEmpty;
+             isEmpty = false;
+            _isExist = isExist;
         }
     }
 
