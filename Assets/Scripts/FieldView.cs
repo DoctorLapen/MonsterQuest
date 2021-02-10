@@ -1,4 +1,4 @@
-﻿using System;
+﻿
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
@@ -81,6 +81,13 @@ namespace MonsterQuest
         public void DeleteElement(int column, int row)
         {
             Destroy(_elements[column, row].gameObject);
+        }
+
+        public void MoveDownElement(int column, int row)
+        {
+            RectTransform element = _elements[column, row];
+            element.anchoredPosition = CalculateCellPosition(column, row + 1);
+            _elements[column, row+1] = element ;
         }
 
 

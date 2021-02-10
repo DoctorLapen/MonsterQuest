@@ -5,6 +5,7 @@
         void SpawnBackgroundCell(int column,int row);
         void SpawnElement(int column, int row, Element element);
         void ReplaceVisualElements (int columnA,int rowA,int columnB,int rowB);
-        void DeleteElement(int eventArgsColumn, int eventArgsRow);
+        void DeleteElement(int column, int row);
+        void MoveDownElement(int column, int row);
     }
 }

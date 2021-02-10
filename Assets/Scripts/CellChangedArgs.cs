@@ -8,10 +8,4 @@
         public Element element;
 
     }
-
-    public enum ChangeType
-    {
-        Initialize,
-        Delete,
-    }
 }

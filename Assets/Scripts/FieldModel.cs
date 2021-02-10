@@ -153,8 +153,45 @@ namespace MonsterQuest
         {
             foreach (Vector2Int coordinate in elementsCoordinates)
             {
+                Debug.Log(coordinate);
                 _field[coordinate.x, coordinate.y].isEmpty = true;
                 SendCellInfo(coordinate.x, coordinate.y, Element.Yellow, ChangeType.Delete);
+            }
+        }
+
+        public void FillEmptyCells()
+        {
+            for (int row = _fieldRows - 2; row != - 1; row--)
+            {
+                for (int column = 0; column < _fieldColumns; column++)
+                {
+                    Debug.Log($"  Column- {column} row -{row}");
+                    Debug.Log(_field[column, row].isEmpty);
+                    if (!_field[column, row].isEmpty)
+                    {
+                        for (int movingRow = row ; movingRow < _fieldRows - 1; movingRow++)
+                        {
+                            Debug.Log(_field[column,movingRow + 1].isEmpty);
+                            Debug.Log($" currentCell Column- {column} row -{movingRow}");
+                            Debug.Log($"  targetCell Column- {column} row -{movingRow + 1}");
+                            if (_field[column,movingRow + 1].isEmpty)
+                            {
+                                
+                                Cell currentCell = _field[column, movingRow];
+                                Cell targetCell = _field[column, movingRow + 1];
+                                targetCell.isEmpty = false;
+                                targetCell.element = currentCell.element;
+                                currentCell.isEmpty = true;
+                                SendCellInfo(column, movingRow,currentCell.element,ChangeType.MoveDown);
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+                    }
+                    
+                }
             }
         }
 

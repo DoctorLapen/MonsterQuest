@@ -40,13 +40,12 @@ namespace MonsterQuest
                    
                     HashSet<Vector2Int> matchedElements =
                         _fieldModel.FindMatchedElements(action.elementToMoveCoordinates, secondElementCoordinates);
-                    Debug.Log(action.elementToMoveCoordinates);
-                    Debug.Log(secondElementCoordinates);
-                    Debug.Log(matchedElements.Count);
+                    
                     if (matchedElements.Count > 0)
                     {
                         _fieldModel.ReplaceElements(action.elementToMoveCoordinates,secondElementCoordinates);
                         _fieldModel.DeleteElements(matchedElements);
+                        _fieldModel.FillEmptyCells();
                     }
                     
                 }
@@ -63,6 +62,10 @@ namespace MonsterQuest
             else  if(eventArgs.changeType == ChangeType.Delete)
             {
                 _fieldView.DeleteElement(eventArgs.column,eventArgs.row);
+            }
+            else if (eventArgs.changeType == ChangeType.MoveDown)
+            {
+                _fieldView.MoveDownElement(eventArgs.column,eventArgs.row);
             }
 
         }
