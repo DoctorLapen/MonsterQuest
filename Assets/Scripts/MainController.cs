@@ -37,17 +37,22 @@ namespace MonsterQuest
                 Vector2Int secondElementCoordinates = action.elementToMoveCoordinates + action.moveDirection;
                 if (_fieldModel.IsElementInField(secondElementCoordinates))
                 {
-                   
-                    HashSet<Vector2Int> matchedElements =
-                        _fieldModel.FindMatchedElements(action.elementToMoveCoordinates, secondElementCoordinates);
-                    
-                    if (matchedElements.Count > 0)
+                    bool isMatchedElementsExist = true;
+                    while (isMatchedElementsExist)
                     {
-                        _fieldModel.ReplaceElements(action.elementToMoveCoordinates,secondElementCoordinates);
-                        _fieldModel.DeleteElements(matchedElements);
-                        _fieldModel.FillEmptyCells();
-                        _fieldModel.AddNewElements();
+                        HashSet<Vector2Int> matchedElements =
+                            _fieldModel.FindMatchedElements(action.elementToMoveCoordinates, secondElementCoordinates);
+                        isMatchedElementsExist = matchedElements.Count > 0;
+                        if (isMatchedElementsExist)
+                        {
+                            _fieldModel.ReplaceElements(action.elementToMoveCoordinates,secondElementCoordinates);
+                            _fieldModel.DeleteElements(matchedElements);
+                            _fieldModel.FillEmptyCells();
+                            _fieldModel.AddNewElements();
+                        }
                     }
+
+                   
                     
                 }
             }
