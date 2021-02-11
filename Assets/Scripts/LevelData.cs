@@ -18,7 +18,8 @@ namespace MonsterQuest
             {
                 for (int row = 0; row < rows; row++)
                 {
-                    Field[column, row] = serializableField[column].list[row];
+                    Cell cell = new Cell(serializableField[column].list[row].IsExist);
+                    Field[column, row] = cell;
                 }
             }
         }

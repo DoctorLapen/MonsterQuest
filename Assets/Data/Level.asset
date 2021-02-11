@@ -14,38 +14,54 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   serializableField:
   - list:
-    - _isEmpty: 0
+    - _isExist: 0
       element: 0
-    - _isEmpty: 0
-      element: 0
-    - _isEmpty: 0
-      element: 0
-    - _isEmpty: 0
-      element: 0
+      isEmpty: 0
+    - _isExist: 0
+      element: 2
+      isEmpty: 0
+    - _isExist: 0
+      element: 1
+      isEmpty: 0
+    - _isExist: 0
+      element: 3
+      isEmpty: 0
   - list:
-    - _isEmpty: 0
-      element: 0
-    - _isEmpty: 0
-      element: 0
-    - _isEmpty: 0
-      element: 0
-    - _isEmpty: 0
-      element: 0
+    - _isExist: 0
+      element: 3
+      isEmpty: 0
+    - _isExist: 0
+      element: 2
+      isEmpty: 0
+    - _isExist: 0
+      element: 1
+      isEmpty: 0
+    - _isExist: 0
+      element: 2
+      isEmpty: 0
   - list:
-    - _isEmpty: 0
+    - _isExist: 0
       element: 0
-    - _isEmpty: 0
-      element: 0
-    - _isEmpty: 0
-      element: 0
-    - _isEmpty: 0
-      element: 0
+      isEmpty: 0
+    - _isExist: 0
+      element: 3
+      isEmpty: 0
+    - _isExist: 0
+      element: 2
+      isEmpty: 0
+    - _isExist: 0
+      element: 1
+      isEmpty: 0
   - list:
-    - _isEmpty: 0
+    - _isExist: 0
+      element: 3
+      isEmpty: 0
+    - _isExist: 0
+      element: 1
+      isEmpty: 0
+    - _isExist: 0
       element: 0
-    - _isEmpty: 0
-      element: 0
-    - _isEmpty: 0
-      element: 0
-    - _isEmpty: 0
-      element: 0
+      isEmpty: 0
+    - _isExist: 0
+      element: 3
+      isEmpty: 0
