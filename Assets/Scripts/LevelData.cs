@@ -6,8 +6,11 @@ namespace MonsterQuest
 {
     public class LevelData :ScriptableObject, ILeveldData
     {
+        [SerializeField]
+        private int _turnsForLevel;
         public List<CellList> serializableField = new List<CellList>();
-        public Cell[,] Field { get; private set; } 
+        public Cell[,] Field { get; private set; }
+        public int TurnsForLevel => _turnsForLevel;
 
         private void OnEnable()
         {

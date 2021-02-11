@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7cedd16ee5641fda7a747369d2ba376, type: 3}
   m_Name: Level
   m_EditorClassIdentifier: 
+  _turnsForLevel: 10
   serializableField:
   - list:
     - _isExist: 0

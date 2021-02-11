@@ -16,10 +16,19 @@ namespace MonsterQuest
         [Inject]
         private IInputController _inputController;
 
-        private void Start()
+        [Inject]
+        private ITurnsCounter _turnsCounter;
+        [Inject]
+        private ITextView _turnsView;
+
+        
+
+         private void Start()
         {
             _fieldModel.CellChanged += OnCellChanged;
             _fieldModel.ElementsReplaced += OnElementsReplaced;
+            _turnsView.UpdateText(_turnsCounter.Amount.ToString());
+            _turnsCounter.AmountChanged += (amount) => _turnsView.UpdateText(amount.ToString());
             _fieldModel.InitializeField();
         }
 
@@ -30,31 +39,44 @@ namespace MonsterQuest
 
         private void Update()
         {
-            ActionData action = _inputController.DetectAction();
-            if (action.isActionHappened)
+            if (!_turnsCounter.IsTurnsOver)
             {
-             
-                Vector2Int secondElementCoordinates = action.elementToMoveCoordinates + action.moveDirection;
-                if (_fieldModel.IsElementInField(secondElementCoordinates))
+                ActionData action = _inputController.DetectAction();
+                if (action.isActionHappened)
                 {
-                    bool isMatchedElementsExist = true;
-                    while (isMatchedElementsExist)
+
+                    Vector2Int secondElementCoordinates = action.elementToMoveCoordinates + action.moveDirection;
+                    if (_fieldModel.IsElementInField(secondElementCoordinates))
                     {
-                        HashSet<Vector2Int> matchedElements =
-                            _fieldModel.FindMatchedElements(action.elementToMoveCoordinates, secondElementCoordinates);
-                        isMatchedElementsExist = matchedElements.Count > 0;
-                        if (isMatchedElementsExist)
+                        bool isMatchedElementsExist = true;
+                        bool isFirstMatch = false;
+                        while (isMatchedElementsExist)
                         {
-                            _fieldModel.ReplaceElements(action.elementToMoveCoordinates,secondElementCoordinates);
-                            _fieldModel.DeleteElements(matchedElements);
-                            _fieldModel.FillEmptyCells();
-                            _fieldModel.AddNewElements();
+                            HashSet<Vector2Int> matchedElements =
+                                _fieldModel.FindMatchedElements(action.elementToMoveCoordinates,
+                                    secondElementCoordinates);
+                            isMatchedElementsExist = matchedElements.Count > 0;
+                            if (isMatchedElementsExist)
+                            {
+                                isFirstMatch = true;
+                                _fieldModel.ReplaceElements(action.elementToMoveCoordinates, secondElementCoordinates);
+                                _fieldModel.DeleteElements(matchedElements);
+                                _fieldModel.FillEmptyCells();
+                                _fieldModel.AddNewElements();
+                            }
+                        }
+
+                        if (isFirstMatch)
+                        {
+                            _turnsCounter.СountTurn();
                         }
                     }
-
-                   
                     
                 }
+            }
+            else
+            {
+                Debug.Log("GameOver");
             }
         }
 
