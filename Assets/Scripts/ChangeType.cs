@@ -5,5 +5,6 @@
         Initialize,
         Delete,
         MoveDown,
+        CreateNew,
     }
 }

@@ -153,7 +153,6 @@ namespace MonsterQuest
         {
             foreach (Vector2Int coordinate in elementsCoordinates)
             {
-                Debug.Log(coordinate);
                 _field[coordinate.x, coordinate.y].isEmpty = true;
                 SendCellInfo(coordinate.x, coordinate.y, Element.Yellow, ChangeType.Delete);
             }
@@ -165,15 +164,12 @@ namespace MonsterQuest
             {
                 for (int column = 0; column < _fieldColumns; column++)
                 {
-                    Debug.Log($"  Column- {column} row -{row}");
-                    Debug.Log(_field[column, row].isEmpty);
+                  
                     if (!_field[column, row].isEmpty)
                     {
                         for (int movingRow = row ; movingRow < _fieldRows - 1; movingRow++)
                         {
-                            Debug.Log(_field[column,movingRow + 1].isEmpty);
-                            Debug.Log($" currentCell Column- {column} row -{movingRow}");
-                            Debug.Log($"  targetCell Column- {column} row -{movingRow + 1}");
+                           
                             if (_field[column,movingRow + 1].isEmpty)
                             {
                                 
@@ -191,6 +187,23 @@ namespace MonsterQuest
                         }
                     }
                     
+                }
+            }
+        }
+
+        public void AddNewElements()
+        {
+            for (int column = 0; column < _fieldColumns; column++)
+            {
+                for (int row = 0; row < _fieldRows; row++)
+                {
+                    if (_field[column, row].isEmpty)
+                    {
+                        _field[column, row].element = SelectRandomElement();
+                        Debug.Log(_field[column, row].element);
+                        _field[column, row].isEmpty = false;
+                        SendCellInfo(column, row, _field[column, row].element, ChangeType.CreateNew);
+                    }
                 }
             }
         }

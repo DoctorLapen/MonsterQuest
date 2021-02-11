@@ -46,6 +46,7 @@ namespace MonsterQuest
                         _fieldModel.ReplaceElements(action.elementToMoveCoordinates,secondElementCoordinates);
                         _fieldModel.DeleteElements(matchedElements);
                         _fieldModel.FillEmptyCells();
+                        _fieldModel.AddNewElements();
                     }
                     
                 }
@@ -66,6 +67,10 @@ namespace MonsterQuest
             else if (eventArgs.changeType == ChangeType.MoveDown)
             {
                 _fieldView.MoveDownElement(eventArgs.column,eventArgs.row);
+            }
+            else if (eventArgs.changeType == ChangeType.CreateNew)
+            {
+                _fieldView.SpawnElement(eventArgs.column,eventArgs.row, eventArgs.element);
             }
 
         }

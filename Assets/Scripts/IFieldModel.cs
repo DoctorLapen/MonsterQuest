@@ -14,5 +14,6 @@ namespace MonsterQuest
         HashSet<Vector2Int> FindMatchedElements(Vector2Int coordinateA,Vector2Int coordinateB);
         void DeleteElements(IEnumerable<Vector2Int> elementsCoordinates);
         void FillEmptyCells();
+        void AddNewElements();
     }
 }
