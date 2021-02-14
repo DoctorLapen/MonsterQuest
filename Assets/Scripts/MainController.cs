@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
@@ -21,6 +22,9 @@ namespace MonsterQuest
         [Inject]
         private ITextView _turnsView;
 
+        private bool _isMoveCorrutineOn = false;
+        private bool _isFirstMatch = false;
+
         
 
          private void Start()
@@ -41,37 +45,20 @@ namespace MonsterQuest
         {
             if (!_turnsCounter.IsTurnsOver)
             {
-                ActionData action = _inputController.DetectAction();
-                if (action.isActionHappened)
+                if (!_isMoveCorrutineOn)
                 {
-
-                    Vector2Int secondElementCoordinates = action.elementToMoveCoordinates + action.moveDirection;
-                    if (_fieldModel.IsElementInField(secondElementCoordinates))
+                   
+                    ActionData action = _inputController.DetectAction();
+                    if (action.isActionHappened)
                     {
-                        bool isMatchedElementsExist = true;
-                        bool isFirstMatch = false;
-                        while (isMatchedElementsExist)
+
+                        Vector2Int secondElementCoordinates = action.elementToMoveCoordinates + action.moveDirection;
+                        if (_fieldModel.IsElementInField(secondElementCoordinates))
                         {
-                            HashSet<Vector2Int> matchedElements =
-                                _fieldModel.FindMatchedElements(action.elementToMoveCoordinates,
-                                    secondElementCoordinates);
-                            isMatchedElementsExist = matchedElements.Count > 0;
-                            if (isMatchedElementsExist)
-                            {
-                                isFirstMatch = true;
-                                _fieldModel.ReplaceElements(action.elementToMoveCoordinates, secondElementCoordinates);
-                                _fieldModel.DeleteElements(matchedElements);
-                                _fieldModel.FillEmptyCells();
-                                _fieldModel.AddNewElements();
-                            }
+                            StartCoroutine(MakeMoveElements(action, secondElementCoordinates));
                         }
 
-                        if (isFirstMatch)
-                        {
-                            _turnsCounter.СountTurn();
-                        }
                     }
-                    
                 }
             }
             else
@@ -79,6 +66,35 @@ namespace MonsterQuest
                 Debug.Log("GameOver");
             }
         }
+
+        private IEnumerator MakeMoveElements(ActionData action, Vector2Int secondElementCoordinates)
+        {
+            bool isMatchedElementsExist = true;
+            while (isMatchedElementsExist)
+            {
+                HashSet<Vector2Int> matchedElements =
+                    _fieldModel.FindMatchedElements(action.elementToMoveCoordinates, secondElementCoordinates);
+                isMatchedElementsExist = matchedElements.Count > 0;
+                if (isMatchedElementsExist)
+                {
+                    _isFirstMatch = true;
+                    _isMoveCorrutineOn = true;
+                    _fieldModel.ReplaceElements(action.elementToMoveCoordinates, secondElementCoordinates);
+                    _fieldModel.DeleteElements(matchedElements);
+                    yield return new WaitForSeconds(1.5f);
+                    _fieldModel.FillEmptyCells();
+                    _fieldModel.AddNewElements();
+                    yield return new WaitForSeconds(1.5f);
+                }
+            }
+            _isMoveCorrutineOn = false;
+            if (_isFirstMatch)
+            {
+                _turnsCounter.СountTurn();
+            }
+        }
+
+        
 
         private void OnCellChanged(CellChangedArgs eventArgs)
         {
