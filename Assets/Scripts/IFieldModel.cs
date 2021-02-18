@@ -15,5 +15,6 @@ namespace MonsterQuest
         void DeleteElements(IEnumerable<Vector2Int> elementsCoordinates);
         void FillEmptyCells();
         void AddNewElements();
+        event Action<ElementsMoveDownArgs> ElementsMovedDown;
     }
 }

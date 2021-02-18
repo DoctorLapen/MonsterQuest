@@ -21,8 +21,7 @@ namespace MonsterQuest
         private ITurnsCounter _turnsCounter;
         [Inject]
         private ITextView _turnsView;
-
-        private bool _isMoveCorrutineOn = false;
+        
         private bool _isFirstMatch = false;
 
         
@@ -31,6 +30,7 @@ namespace MonsterQuest
         {
             _fieldModel.CellChanged += OnCellChanged;
             _fieldModel.ElementsReplaced += OnElementsReplaced;
+            _fieldModel.ElementsMovedDown += (args) => _fieldView.MoveDownElements(args.columnsMoveInfos);
             _turnsView.UpdateText(_turnsCounter.Amount.ToString());
             _turnsCounter.AmountChanged += (amount) => _turnsView.UpdateText(amount.ToString());
             _fieldModel.InitializeField();
@@ -45,8 +45,7 @@ namespace MonsterQuest
         {
             if (!_turnsCounter.IsTurnsOver)
             {
-                if (!_isMoveCorrutineOn)
-                {
+              
                    
                     ActionData action = _inputController.DetectAction();
                     if (action.isActionHappened)
@@ -55,11 +54,30 @@ namespace MonsterQuest
                         Vector2Int secondElementCoordinates = action.elementToMoveCoordinates + action.moveDirection;
                         if (_fieldModel.IsElementInField(secondElementCoordinates))
                         {
-                            StartCoroutine(MakeMoveElements(action, secondElementCoordinates));
+                            bool isMatchedElementsExist = true;
+                            // while (isMatchedElementsExist)
+                            // {
+                                HashSet<Vector2Int> matchedElements =
+                                    _fieldModel.FindMatchedElements(action.elementToMoveCoordinates, secondElementCoordinates);
+                                isMatchedElementsExist = matchedElements.Count > 0;
+                                if (isMatchedElementsExist)
+                                {
+                                    _isFirstMatch = true;
+                                    _fieldModel.ReplaceElements(action.elementToMoveCoordinates, secondElementCoordinates);
+                                    _fieldModel.DeleteElements(matchedElements);
+                                    _fieldModel.FillEmptyCells();
+                               //     _fieldModel.AddNewElements();
+                                    
+                                }
+                        //    }
+                            if (_isFirstMatch)
+                            {
+                                _turnsCounter.СountTurn();
+                            }
                         }
 
                     }
-                }
+                
             }
             else
             {
@@ -67,32 +85,7 @@ namespace MonsterQuest
             }
         }
 
-        private IEnumerator MakeMoveElements(ActionData action, Vector2Int secondElementCoordinates)
-        {
-            bool isMatchedElementsExist = true;
-            while (isMatchedElementsExist)
-            {
-                HashSet<Vector2Int> matchedElements =
-                    _fieldModel.FindMatchedElements(action.elementToMoveCoordinates, secondElementCoordinates);
-                isMatchedElementsExist = matchedElements.Count > 0;
-                if (isMatchedElementsExist)
-                {
-                    _isFirstMatch = true;
-                    _isMoveCorrutineOn = true;
-                    _fieldModel.ReplaceElements(action.elementToMoveCoordinates, secondElementCoordinates);
-                    _fieldModel.DeleteElements(matchedElements);
-                    yield return new WaitForSeconds(1.5f);
-                    _fieldModel.FillEmptyCells();
-                    _fieldModel.AddNewElements();
-                    yield return new WaitForSeconds(1.5f);
-                }
-            }
-            _isMoveCorrutineOn = false;
-            if (_isFirstMatch)
-            {
-                _turnsCounter.СountTurn();
-            }
-        }
+       
 
         
 
@@ -106,10 +99,6 @@ namespace MonsterQuest
             else  if(eventArgs.changeType == ChangeType.Delete)
             {
                 _fieldView.DeleteElement(eventArgs.column,eventArgs.row);
-            }
-            else if (eventArgs.changeType == ChangeType.MoveDown)
-            {
-                _fieldView.MoveDownElement(eventArgs.column,eventArgs.row);
             }
             else if (eventArgs.changeType == ChangeType.CreateNew)
             {

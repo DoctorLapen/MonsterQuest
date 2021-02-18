@@ -1,4 +1,6 @@
 ﻿
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
@@ -23,11 +25,17 @@ namespace MonsterQuest
         [SerializeField]
         private float _cellSize;
 
+        [SerializeField]
+        private float _moveStepY;
+
+        
+
         
         
         private Vector3 _startPosition;
 
         private RectTransform[,] _elements;
+        private float DistanceToMoveElementByY;
 
 
         
@@ -38,6 +46,9 @@ namespace MonsterQuest
             int rows = _levelData.Field.GetLength(1);
             _elements = new RectTransform[columns, rows];
             _startPosition = _startPoint.anchoredPosition;
+            Vector2 pointA = CalculateCellPosition(0, 0);
+            Vector2 pointB = CalculateCellPosition(0, 1);
+            DistanceToMoveElementByY = pointA.y - pointB.y;
         }
 
         public void SpawnBackgroundCell(int column,int row)
@@ -83,11 +94,43 @@ namespace MonsterQuest
             Destroy(_elements[column, row].gameObject);
         }
 
-        public void MoveDownElement(int column, int row)
+        public void MoveDownElements(List<ColumnMoveInfo> columnMoveInfos)
         {
-            RectTransform element = _elements[column, row];
-            element.anchoredPosition = CalculateCellPosition(column, row + 1);
-            _elements[column, row+1] = element ;
+            foreach (ColumnMoveInfo moveInfo in columnMoveInfos)
+            {
+                StartCoroutine( MoveDownColumn( moveInfo));
+            }
+        }
+
+        private IEnumerator MoveDownColumn(ColumnMoveInfo moveInfo)
+        {
+            float moveDistance = DistanceToMoveElementByY * moveInfo.moveDistance;
+            int steps =(int) (moveDistance / _moveStepY);
+            float correctiveMoveStep = moveDistance - steps * _moveStepY ;
+            int totalStepsAmount = steps + 1;
+            int currentStepAmount = 0;
+            float currentMoveStep = 0;
+            while (currentStepAmount < totalStepsAmount)
+            {
+                if (currentStepAmount  < steps )
+                {
+                    currentMoveStep = _moveStepY;
+                }
+                else
+                {
+                    currentMoveStep = correctiveMoveStep;
+                }
+
+                foreach (Vector2Int elementCoordinate in moveInfo.elementsToMove)
+                {
+                    _elements[elementCoordinate.x, elementCoordinate.y].anchoredPosition -=
+                        new Vector2(0, currentMoveStep);
+                }
+
+                currentStepAmount++;
+                yield return null;
+            }
+
         }
 
 
