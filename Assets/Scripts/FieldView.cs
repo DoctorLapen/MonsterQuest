@@ -53,25 +53,25 @@ namespace MonsterQuest
 
         public void SpawnBackgroundCell(int column,int row)
         {
-            SpawnVisualElement( column,  row, _backgroundCell);
-        }
-        public void SpawnElement(int column, int row, Element element)
-        {
-           Image el = _elementsViewSettings.ElementsImages[element];
-           RectTransform cell = Instantiate(el.rectTransform, _startPoint.position, Quaternion.identity, transform);
-           cell.sizeDelta = new Vector2(_cellSize, _cellSize);
-           cell.anchoredPosition = CalculateCellPosition(column, row);
-           _elements[column, row] = cell;
-        }
-
-        private void SpawnVisualElement (int column,int row,RectTransform prefab)
-        {
-            
-            RectTransform cell = Instantiate(prefab, _startPoint.position, Quaternion.identity, transform);
+            RectTransform cell = Instantiate(_backgroundCell, _startPoint.position, Quaternion.identity, transform);
             cell.sizeDelta = new Vector2(_cellSize, _cellSize);
             cell.anchoredPosition = CalculateCellPosition(column, row);
             cell.gameObject.GetComponent<CellCoordinate>().Initialize(new Vector2Int(column,row));
             cell.SetAsFirstSibling();
+        }
+        public void SpawnElement(int column, int row, Element element)
+        {
+            SpawnVisualElement(column, row, element, out RectTransform  cell);
+           _elements[column, row] = cell;
+        }
+
+        private void SpawnVisualElement(int column, int row, Element element, out RectTransform cell)
+        {
+            Image el = _elementsViewSettings.ElementsImages[element];
+            cell = Instantiate(el.rectTransform, _startPoint.position, Quaternion.identity, transform);
+            cell.sizeDelta = new Vector2(_cellSize, _cellSize);
+            cell.anchoredPosition = CalculateCellPosition(column, row);
+            
         }
 
         public void ReplaceVisualElements(int columnA, int rowA, int columnB, int rowB)
@@ -94,15 +94,16 @@ namespace MonsterQuest
             Destroy(_elements[column, row].gameObject);
         }
 
-        public void MoveDownElements(List<ColumnMoveInfo> columnMoveInfos)
+        public void MoveDownElements(ElementsMoveDownArgs args)
         {
-            foreach (ColumnMoveInfo moveInfo in columnMoveInfos)
+            foreach (ColumnMoveInfo moveInfo in args.columnsMoveInfos)
             {
-                StartCoroutine( MoveDownColumn( moveInfo));
+                SpawnHiddenElements(moveInfo.newElements, out List<HiddenElement> hiddenElements);
+                StartCoroutine( MoveDownColumn( moveInfo,hiddenElements));
             }
         }
 
-        private IEnumerator MoveDownColumn(ColumnMoveInfo moveInfo)
+        private IEnumerator MoveDownColumn(ColumnMoveInfo moveInfo, List<HiddenElement> hiddenElements)
         {
             float moveDistance = DistanceToMoveElementByY * moveInfo.moveDistance;
             int steps =(int) (moveDistance / _moveStepY);
@@ -121,9 +122,16 @@ namespace MonsterQuest
                     currentMoveStep = correctiveMoveStep;
                 }
 
-                foreach (Vector2Int elementCoordinate in moveInfo.elementsToMove)
+                foreach (Vector2Int elementCoordinate in moveInfo.oldElements)
                 {
+                    Debug.Log(elementCoordinate);
                     _elements[elementCoordinate.x, elementCoordinate.y].anchoredPosition -=
+                        new Vector2(0, currentMoveStep);
+                }
+                foreach (HiddenElement element in hiddenElements )
+                {
+                    
+                    element.Transform.anchoredPosition -=
                         new Vector2(0, currentMoveStep);
                 }
 
@@ -131,7 +139,35 @@ namespace MonsterQuest
                 yield return null;
             }
 
+            foreach (Vector2Int elementCoordinate in moveInfo.oldElements)
+            {
+                RectTransform elementTransform = _elements[elementCoordinate.x, elementCoordinate.y];
+                int newRowPosition = elementCoordinate.y + moveInfo.moveDistance;
+                _elements[elementCoordinate.x, newRowPosition] = elementTransform;
+            }
+           
+            foreach (HiddenElement element in hiddenElements)
+            {
+                Debug.Log(element.Coordinate);
+                int newRowPosition = element.Coordinate.y + moveInfo.moveDistance;
+                _elements[element.Coordinate.x, newRowPosition] = element.Transform;
+            }
+
         }
+
+        private void SpawnHiddenElements(List<NewElementInfo> newElements,out List<HiddenElement> hiddenElements)
+        {
+            hiddenElements = new List<HiddenElement>();
+            foreach (NewElementInfo newElement in newElements)
+            {
+                SpawnVisualElement(newElement.coordinate.x, newElement.coordinate.y, newElement.element, out RectTransform cell);
+                HiddenElement hiddenElement = new HiddenElement(newElement.coordinate, cell);
+                hiddenElements.Add(hiddenElement);
+            }
+
+        }
+       
+
 
 
         private Vector3 CalculateCellPosition(int column, int row)
@@ -141,10 +177,19 @@ namespace MonsterQuest
             newPosition.y -= ( _backgroundCell.sizeDelta.y + _offsetBetweenCells) * row;
             return newPosition;
         }
-       
-        
-       
 
+
+
+        private class HiddenElement
+        {
+            public Vector2Int Coordinate { get;  }
+            public RectTransform Transform { get; }
+            public HiddenElement(Vector2Int coordinate, RectTransform transform)
+            {
+                Coordinate = coordinate;
+                Transform = transform;
+            }
+        }
 
     }
 }

@@ -6,6 +6,7 @@ namespace MonsterQuest
     public class ColumnMoveInfo
     {
         public int moveDistance;
-        public List<Vector2Int> elementsToMove = new List<Vector2Int>();
+        public List<Vector2Int> oldElements = new List<Vector2Int>();
+        public List<NewElementInfo> newElements = new List<NewElementInfo>();
     }
 }

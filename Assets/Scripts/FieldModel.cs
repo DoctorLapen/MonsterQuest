@@ -70,6 +70,15 @@ namespace MonsterQuest
             }
         }
 
+        public void ShiftElements()
+        {
+           List<ColumnMoveInfo> columnMoveInfos = FillEmptyCells();
+           AddNewElements(columnMoveInfos);
+           ElementsMoveDownArgs args = new ElementsMoveDownArgs();
+           args.columnsMoveInfos = columnMoveInfos;
+           ElementsMovedDown?.Invoke(args);
+        }
+
         public bool IsElementInField(Vector2Int elementCoordinates)
         {
             var isXInField = 0 <= elementCoordinates.x && elementCoordinates.x < _fieldColumns;
@@ -114,7 +123,7 @@ namespace MonsterQuest
             }
         }
 
-        public void FillEmptyCells()
+        public List<ColumnMoveInfo> FillEmptyCells()
         {
             var columnMoveInfos = new List<ColumnMoveInfo>();
             ColumnMoveInfo columnMoveInfo;
@@ -151,7 +160,7 @@ namespace MonsterQuest
                                 if (isElementMoved)
                                 {
                                     columnMoveInfo.moveDistance = movingRow - movedElement.y;
-                                    columnMoveInfo.elementsToMove.Add(movedElement);
+                                    columnMoveInfo.oldElements.Add(movedElement);
                                 }
 
                                 break;
@@ -161,31 +170,36 @@ namespace MonsterQuest
                     }
                 }
 
-                if (columnMoveInfo.elementsToMove.Count > 0)
+                if (columnMoveInfo.oldElements.Count > 0)
                 {
                     columnMoveInfos.Add(columnMoveInfo);
                 }
             }
 
-            ElementsMoveDownArgs args = new ElementsMoveDownArgs();
-            args.columnsMoveInfos = columnMoveInfos;
-            ElementsMovedDown?.Invoke(args);
+
+            return columnMoveInfos;
 
         }
 
-        public void AddNewElements()
+        public void AddNewElements(List<ColumnMoveInfo> columnMoveInfos)
         {
-            for (var column = 0; column < _fieldColumns; column++)
+            for (int i = 0 ;i < columnMoveInfos.Count;i++)
             {
-                for (var row = 0; row < _fieldRows; row++)
+                int elementIndex = columnMoveInfos[i].oldElements.Count - 1 ;
+                int filledCellAmount = 0;
+                int emptyCellAmount = columnMoveInfos[i].moveDistance;
+                while (filledCellAmount < emptyCellAmount)
                 {
-                    if (_field[column, row].isEmpty)
-                    {
-                        _field[column, row].element = SelectRandomElement();
-                        Debug.Log(_field[column, row].element);
-                        _field[column, row].isEmpty = false;
-                        SendCellInfo(column, row, _field[column, row].element, ChangeType.CreateNew);
-                    }
+                    Vector2Int elementCoordinate = columnMoveInfos[i].oldElements[elementIndex];
+                    Cell cell = _field[elementCoordinate.x, elementCoordinate.y];
+                    cell.element = SelectRandomElement();
+                    cell.isEmpty = false;
+                    NewElementInfo newElement = new NewElementInfo();
+                    newElement.element = cell.element;
+                    newElement.coordinate = new Vector2Int(elementCoordinate.x, -elementCoordinate.y - 1);
+                    columnMoveInfos[i].newElements.Add(newElement);
+                    filledCellAmount++;
+                    elementIndex--;
                 }
             }
         }

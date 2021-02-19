@@ -30,7 +30,7 @@ namespace MonsterQuest
         {
             _fieldModel.CellChanged += OnCellChanged;
             _fieldModel.ElementsReplaced += OnElementsReplaced;
-            _fieldModel.ElementsMovedDown += (args) => _fieldView.MoveDownElements(args.columnsMoveInfos);
+            _fieldModel.ElementsMovedDown += _fieldView.MoveDownElements;
             _turnsView.UpdateText(_turnsCounter.Amount.ToString());
             _turnsCounter.AmountChanged += (amount) => _turnsView.UpdateText(amount.ToString());
             _fieldModel.InitializeField();
@@ -65,8 +65,7 @@ namespace MonsterQuest
                                     _isFirstMatch = true;
                                     _fieldModel.ReplaceElements(action.elementToMoveCoordinates, secondElementCoordinates);
                                     _fieldModel.DeleteElements(matchedElements);
-                                    _fieldModel.FillEmptyCells();
-                               //     _fieldModel.AddNewElements();
+                                    _fieldModel.ShiftElements();
                                     
                                 }
                         //    }
