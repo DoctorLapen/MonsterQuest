@@ -96,10 +96,10 @@ namespace MonsterQuest
 
         public void MoveDownElements(ElementsMoveDownArgs args)
         {
-            foreach (ColumnMoveInfo moveInfo in args.columnsMoveInfos)
+            foreach (KeyValuePair<int,ColumnMoveInfo> moveInfoPair in args.columnsMoveInfos)
             {
-                SpawnHiddenElements(moveInfo.newElements, out List<HiddenElement> hiddenElements);
-                StartCoroutine( MoveDownColumn( moveInfo,hiddenElements));
+                SpawnHiddenElements(moveInfoPair.Value.newElements, out List<HiddenElement> hiddenElements);
+                StartCoroutine( MoveDownColumn( moveInfoPair.Value,hiddenElements));
             }
         }
 
@@ -150,6 +150,8 @@ namespace MonsterQuest
             {
                 Debug.Log(element.Coordinate);
                 int newRowPosition = element.Coordinate.y + moveInfo.moveDistance;
+                Debug.Log(moveInfo.moveDistance);
+                Debug.Log(newRowPosition);
                 _elements[element.Coordinate.x, newRowPosition] = element.Transform;
             }
 

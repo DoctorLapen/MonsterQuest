@@ -4,6 +4,6 @@ namespace MonsterQuest
 {
     public class ElementsMoveDownArgs
     {
-        public List<ColumnMoveInfo> columnsMoveInfos;
+        public Dictionary<int,ColumnMoveInfo> columnsMoveInfos;
     }
 }
