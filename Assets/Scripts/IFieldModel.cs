@@ -16,5 +16,6 @@ namespace MonsterQuest
         
         event Action<ElementsMoveDownArgs> ElementsMovedDown;
         void ShiftElements();
+        HashSet<Vector2Int> FindMatchedElements();
     }
 }

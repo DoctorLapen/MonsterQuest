@@ -23,6 +23,8 @@ namespace MonsterQuest
         private ITextView _turnsView;
         
         private bool _isFirstMatch = false;
+        private bool _isColumnsMoving = false;
+        private bool _isMatchedElementsExist = true;
 
         
 
@@ -33,10 +35,25 @@ namespace MonsterQuest
             _fieldModel.ElementsMovedDown += _fieldView.MoveDownElements;
             _turnsView.UpdateText(_turnsCounter.Amount.ToString());
             _turnsCounter.AmountChanged += (amount) => _turnsView.UpdateText(amount.ToString());
+            _fieldView.ColumnsMoved += OnColumnsMoved;
             _fieldModel.InitializeField();
         }
 
-        private void OnElementsReplaced(ElementsReplacedArgs args)
+         private void OnColumnsMoved()
+         {
+             _isColumnsMoving = false;
+             HashSet<Vector2Int> matchedElements =
+                 _fieldModel.FindMatchedElements();
+             _isMatchedElementsExist = matchedElements.Count > 0;
+             if (_isMatchedElementsExist)
+             {
+                 _fieldModel.DeleteElements(matchedElements);
+                 _isColumnsMoving = true;
+                 _fieldModel.ShiftElements();
+             }
+         }
+
+         private void OnElementsReplaced(ElementsReplacedArgs args)
         {
             _fieldView.ReplaceVisualElements(args.elementA.x,args.elementA.y,args.elementB.x,args.elementB.y);
         }
@@ -45,8 +62,9 @@ namespace MonsterQuest
         {
             if (!_turnsCounter.IsTurnsOver)
             {
-              
-                   
+                
+                if (!_isColumnsMoving)
+                {
                     ActionData action = _inputController.DetectAction();
                     if (action.isActionHappened)
                     {
@@ -54,29 +72,31 @@ namespace MonsterQuest
                         Vector2Int secondElementCoordinates = action.elementToMoveCoordinates + action.moveDirection;
                         if (_fieldModel.IsElementInField(secondElementCoordinates))
                         {
-                            bool isMatchedElementsExist = true;
-                            // while (isMatchedElementsExist)
-                            // {
-                                HashSet<Vector2Int> matchedElements =
-                                    _fieldModel.FindMatchedElements(action.elementToMoveCoordinates, secondElementCoordinates);
-                                isMatchedElementsExist = matchedElements.Count > 0;
-                                if (isMatchedElementsExist)
-                                {
-                                    _isFirstMatch = true;
-                                    _fieldModel.ReplaceElements(action.elementToMoveCoordinates, secondElementCoordinates);
-                                    _fieldModel.DeleteElements(matchedElements);
-                                    _fieldModel.ShiftElements();
-                                    
-                                }
-                        //    }
+                            HashSet<Vector2Int> matchedElements =
+                                _fieldModel.FindMatchedElements(action.elementToMoveCoordinates,
+                                    secondElementCoordinates);
+                            _isMatchedElementsExist = matchedElements.Count > 0;
+                            if (_isMatchedElementsExist)
+                            {
+                                _isFirstMatch = true;
+                                _fieldModel.ReplaceElements(action.elementToMoveCoordinates, secondElementCoordinates);
+                                _fieldModel.DeleteElements(matchedElements);
+                                _isColumnsMoving = true;
+                                _fieldModel.ShiftElements();
+                            }
+
                             if (_isFirstMatch)
                             {
                                 _turnsCounter.СountTurn();
+                                _isFirstMatch = false;
                             }
                         }
 
+
+
                     }
-                
+                }
+
             }
             else
             {
@@ -84,9 +104,8 @@ namespace MonsterQuest
             }
         }
 
-       
+    
 
-        
 
         private void OnCellChanged(CellChangedArgs eventArgs)
         {

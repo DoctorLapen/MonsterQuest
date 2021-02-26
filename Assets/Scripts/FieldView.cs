@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,6 +14,8 @@ namespace MonsterQuest
         private IElementsViewSettings _elementsViewSettings;
         [Inject]
         private ILeveldData _levelData;
+
+        public event Action ColumnsMoved; 
         
         [SerializeField]
         private RectTransform _backgroundCell;
@@ -36,6 +39,8 @@ namespace MonsterQuest
 
         private RectTransform[,] _elements;
         private float DistanceToMoveElementByY;
+        private int _movingColumnsCount = 0;
+        private int _currentMovedColums= 0;
 
 
         
@@ -96,11 +101,15 @@ namespace MonsterQuest
 
         public void MoveDownElements(ElementsMoveDownArgs args)
         {
+            _movingColumnsCount = 0;
+            _currentMovedColums = 0;
             foreach (KeyValuePair<int,ColumnMoveInfo> moveInfoPair in args.columnsMoveInfos)
             {
                 SpawnHiddenElements(moveInfoPair.Value.newElements, out List<HiddenElement> hiddenElements);
                 StartCoroutine( MoveDownColumn( moveInfoPair.Value,hiddenElements));
+                _movingColumnsCount++;
             }
+          
         }
 
         private IEnumerator MoveDownColumn(ColumnMoveInfo moveInfo, List<HiddenElement> hiddenElements)
@@ -124,7 +133,6 @@ namespace MonsterQuest
 
                 foreach (Vector2Int elementCoordinate in moveInfo.oldElements)
                 {
-                    Debug.Log(elementCoordinate);
                     _elements[elementCoordinate.x, elementCoordinate.y].anchoredPosition -=
                         new Vector2(0, currentMoveStep);
                 }
@@ -148,11 +156,19 @@ namespace MonsterQuest
            
             foreach (HiddenElement element in hiddenElements)
             {
-                Debug.Log(element.Coordinate);
                 int newRowPosition = element.Coordinate.y + moveInfo.moveDistance;
-                Debug.Log(moveInfo.moveDistance);
-                Debug.Log(newRowPosition);
                 _elements[element.Coordinate.x, newRowPosition] = element.Transform;
+            }
+
+            CountMovedColumn();
+        }
+
+        private void CountMovedColumn()
+        {
+            _currentMovedColums++;
+            if (_currentMovedColums == _movingColumnsCount)
+            {
+                ColumnsMoved?.Invoke();
             }
 
         }

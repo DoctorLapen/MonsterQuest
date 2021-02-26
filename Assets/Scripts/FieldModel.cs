@@ -85,7 +85,10 @@ namespace MonsterQuest
             var isYInField = 0 <= elementCoordinates.y && elementCoordinates.y < _fieldRows;
             return isXInField && isYInField;
         }
-
+        public HashSet<Vector2Int> FindMatchedElements()
+        {
+            return  FindMatch(_field);
+        }
         public HashSet<Vector2Int> FindMatchedElements(Vector2Int coordinateA, Vector2Int coordinateB)
         {
             var _testField = new Cell[_fieldColumns, _fieldRows];
@@ -94,11 +97,17 @@ namespace MonsterQuest
             var elementB = _testField[coordinateB.x, coordinateB.y];
             _testField[coordinateA.x, coordinateA.y] = elementB;
             _testField[coordinateB.x, coordinateB.y] = elementA;
+            return FindMatch(_testField);
+        }
+
+        private HashSet<Vector2Int> FindMatch(Cell[,] field)
+        {
             var matchedHorizontalElements = FindMatchesByDirection(_fieldRows, _fieldColumns,
-                (j, i) => _testField[j, i].element, (j, i) => new Vector2Int(j, i));
-            var matchedVerticalElements = FindMatchesByDirection(_fieldColumns, _fieldRows,
-                (j, i) => _testField[i, j].element, (j, i) => new Vector2Int(i, j));
+                (j, i) => field[j, i].element, (j, i) => new Vector2Int(j, i));
+            var matchedVerticalElements = FindMatchesByDirection(_fieldColumns, _fieldRows, (j, i) => field[i, j].element,
+                (j, i) => new Vector2Int(i, j));
             matchedHorizontalElements.UnionWith(matchedVerticalElements);
+            
             return matchedHorizontalElements;
         }
 
@@ -132,14 +141,18 @@ namespace MonsterQuest
             for (var column = 0; column < _fieldColumns; column++)
             {
                 columnMoveInfo = new ColumnMoveInfo();
+               
                 for (var row = _fieldRows - 2; row != -1; row--)
                 {
+                    
+                    
                     if (!_field[column, row].isEmpty)
                     {
                         var isElementMoved = false;
                         Vector2Int movedElement = Vector2Int.zero;
                         for (var movingRow = row; movingRow < _fieldRows - 1; movingRow++)
                         {
+                            bool isMove = _field[column, movingRow + 1].isEmpty;
                             if (_field[column, movingRow + 1].isEmpty)
 
                             {
@@ -155,11 +168,19 @@ namespace MonsterQuest
                                 targetCell.element = currentCell.element;
                                 currentCell.isEmpty = true;
                             }
-                            else if(!_field[column, movingRow + 1].isEmpty || movingRow == _fieldRows - 2)
+                            
+                            if(!_field[column, movingRow + 1].isEmpty && !isMove  || movingRow == _fieldRows - 2)
                             {
+
                                 if (isElementMoved)
                                 {
-                                    columnMoveInfo.moveDistance = movingRow - movedElement.y;
+                                    Debug.Log(!_field[column, movingRow + 1].isEmpty);
+                                    Debug.Log(movingRow == _fieldRows - 2);
+                                    columnMoveInfo.moveDistance = movingRow + 1 - movedElement.y;
+                                    Debug.Log($"column {column} ==");
+                                    Debug.Log($"movingRow {movingRow} ==");
+                                    Debug.Log($"movedElement.y {movedElement.y} ==");
+                                    Debug.Log($"columnMoveInfo.moveDistance {columnMoveInfo.moveDistance} ==");
                                     columnMoveInfo.oldElements.Add(movedElement);
                                 }
 
@@ -185,6 +206,7 @@ namespace MonsterQuest
         {
             for (int column = 0; column < _fieldColumns; column++)
             {
+                bool isAddNewColumn = false;
                 for (int row = _fieldColumns - 1; row != - 1; row--)
                 {
                     if (_field[column, row].isEmpty)
@@ -194,17 +216,23 @@ namespace MonsterQuest
                         NewElementInfo newElement = new NewElementInfo();
                         newElement.element = _field[column, row].element;
                         newElement.coordinate = new Vector2Int(column, -row - 1);
-                        Debug.Log(column);
                         if (!columnMoveInfos.ContainsKey(column))
                         {
+                            isAddNewColumn = true;
                             ColumnMoveInfo columnMoveInfo = new ColumnMoveInfo();
-                            columnMoveInfo.moveDistance = -newElement.coordinate.y;
                             columnMoveInfos.Add(column,columnMoveInfo);
                         }
 
                         columnMoveInfos[column].newElements.Add(newElement);
                     }
                 }
+
+                if (isAddNewColumn)
+                {
+                    columnMoveInfos[column].moveDistance = columnMoveInfos[column].newElements.Count;
+                }
+            
+
                 
             }
         }
