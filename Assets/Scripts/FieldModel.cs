@@ -168,15 +168,25 @@ namespace MonsterQuest
                                 targetCell.element = currentCell.element;
                                 currentCell.isEmpty = true;
                             }
-                            
-                            if(!_field[column, movingRow + 1].isEmpty && !isMove  || movingRow == _fieldRows - 2)
+
+                            bool isLastColumnElement = movingRow == _fieldRows - 2;
+                            bool isDownElementNotEmpty = !_field[column, movingRow + 1].isEmpty && !isMove;
+                            if(isDownElementNotEmpty  || isLastColumnElement )
                             {
 
                                 if (isElementMoved)
                                 {
                                     Debug.Log(!_field[column, movingRow + 1].isEmpty);
                                     Debug.Log(movingRow == _fieldRows - 2);
-                                    columnMoveInfo.moveDistance = movingRow + 1 - movedElement.y;
+                                    if (isDownElementNotEmpty)
+                                    {
+                                        columnMoveInfo.moveDistance = movingRow  - movedElement.y;
+                                    }
+                                    else if (isLastColumnElement)
+                                    {
+                                        columnMoveInfo.moveDistance = movingRow + 1 - movedElement.y;
+                                    }
+
                                     Debug.Log($"column {column} ==");
                                     Debug.Log($"movingRow {movingRow} ==");
                                     Debug.Log($"movedElement.y {movedElement.y} ==");
