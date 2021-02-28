@@ -176,8 +176,6 @@ namespace MonsterQuest
 
                                 if (isElementMoved)
                                 {
-                                    Debug.Log(!_field[column, movingRow + 1].isEmpty);
-                                    Debug.Log(movingRow == _fieldRows - 2);
                                     if (isDownElementNotEmpty)
                                     {
                                         columnMoveInfo.moveDistance = movingRow  - movedElement.y;
@@ -186,11 +184,7 @@ namespace MonsterQuest
                                     {
                                         columnMoveInfo.moveDistance = movingRow + 1 - movedElement.y;
                                     }
-
-                                    Debug.Log($"column {column} ==");
-                                    Debug.Log($"movingRow {movingRow} ==");
-                                    Debug.Log($"movedElement.y {movedElement.y} ==");
-                                    Debug.Log($"columnMoveInfo.moveDistance {columnMoveInfo.moveDistance} ==");
+                                    
                                     columnMoveInfo.oldElements.Add(movedElement);
                                 }
 
@@ -217,6 +211,7 @@ namespace MonsterQuest
             for (int column = 0; column < _fieldColumns; column++)
             {
                 bool isAddNewColumn = false;
+                int newRowCoordinate = -1;
                 for (int row = _fieldColumns - 1; row != - 1; row--)
                 {
                     if (_field[column, row].isEmpty)
@@ -225,7 +220,8 @@ namespace MonsterQuest
                         _field[column, row].element = SelectRandomElement();
                         NewElementInfo newElement = new NewElementInfo();
                         newElement.element = _field[column, row].element;
-                        newElement.coordinate = new Vector2Int(column, -row - 1);
+                        newElement.coordinate = new Vector2Int(column, newRowCoordinate);
+                        newRowCoordinate--;
                         if (!columnMoveInfos.ContainsKey(column))
                         {
                             isAddNewColumn = true;
