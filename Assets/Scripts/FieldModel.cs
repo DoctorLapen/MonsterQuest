@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -295,18 +296,12 @@ namespace MonsterQuest
                 var isSuitableElementRow = true;
                 if (columnPreviusElements.Count > 0)
                 {
-                    foreach (var previusElement in columnPreviusElements)
-                    {
-                        isSuitableElementColumn = currentElement != previusElement;
-                    }
+                    isSuitableElementColumn = columnPreviusElements.Any(el => el != currentElement);
                 }
 
                 if (rowPreviusElements.Count > 0)
                 {
-                    foreach (var previusElement in rowPreviusElements)
-                    {
-                        isSuitableElementRow = currentElement != previusElement;
-                    }
+                    isSuitableElementRow = rowPreviusElements.Any(el => el != currentElement);
                 }
 
                 if (isSuitableElementColumn && isSuitableElementRow)
