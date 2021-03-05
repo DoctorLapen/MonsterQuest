@@ -18,8 +18,14 @@ namespace MonsterQuest
         }
         public Cell(bool isExist)
         {
-             isEmpty = false;
+             isEmpty = true;
             _isExist = isExist;
+        }
+        public Cell(bool isExist,Element element)
+        {
+            isEmpty = false;
+            _isExist = isExist;
+            this.element = element;
         }
     }
 

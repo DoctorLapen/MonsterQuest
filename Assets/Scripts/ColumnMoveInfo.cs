@@ -5,8 +5,16 @@ namespace MonsterQuest
 {
     public class ColumnMoveInfo
     {
-        public int moveDistance;
-        public List<Vector2Int> oldElements = new List<Vector2Int>();
-        public List<NewElementInfo> newElements = new List<NewElementInfo>();
+        public List<SegmentMoveInfo> oldElements;
+        public NewSegmentMoveInfo newElements;
+
+        public ColumnMoveInfo()
+        {
+            this.oldElements = new List<SegmentMoveInfo>();
+        }
+        public ColumnMoveInfo(List<SegmentMoveInfo> oldElements)
+        {
+            this.oldElements = oldElements;
+        }
     }
 }

@@ -105,61 +105,72 @@ namespace MonsterQuest
             _currentMovedColums = 0;
             foreach (KeyValuePair<int,ColumnMoveInfo> moveInfoPair in args.columnsMoveInfos)
             {
-                SpawnHiddenElements(moveInfoPair.Value.newElements, out List<HiddenElement> hiddenElements);
-                StartCoroutine( MoveDownColumn( moveInfoPair.Value,hiddenElements));
+                List<SegmentInfoInView> segmentInfos = new List<SegmentInfoInView>();
+                foreach (SegmentMoveInfo segment in  moveInfoPair.Value.oldElements)
+                {
+                    SegmentInfoInView info = new SegmentInfoInView();
+                    info.elements = GetOldElements(segment.elementsToMove);
+                    info.moveDistance = segment.MoveDistance;
+                    CalculateMoveProperties(segment.MoveDistance, info);
+                    segmentInfos.Add(info);
+                }
+
+                SpawnHiddenElements(moveInfoPair.Value.newElements.elements, out List<MovingElement> hiddenElements);
+                SegmentInfoInView newElementsSegment = new SegmentInfoInView();
+                newElementsSegment.elements = hiddenElements;
+                newElementsSegment.moveDistance = moveInfoPair.Value.newElements.MoveDistance;
+                CalculateMoveProperties(moveInfoPair.Value.newElements.MoveDistance, newElementsSegment);
+                segmentInfos.Add(newElementsSegment);
+                StartCoroutine( MoveDownColumn(segmentInfos));
                 _movingColumnsCount++;
             }
           
         }
 
-        private IEnumerator MoveDownColumn(ColumnMoveInfo moveInfo, List<HiddenElement> hiddenElements)
+        private IEnumerator MoveDownColumn(List<SegmentInfoInView> segmentInfos )
         {
-            float moveDistance = DistanceToMoveElementByY * moveInfo.moveDistance;
-            int steps =(int) (moveDistance / _moveStepY);
-            float correctiveMoveStep = moveDistance - steps * _moveStepY ;
-            int totalStepsAmount = steps + 1;
-            int currentStepAmount = 0;
-            float currentMoveStep = 0;
-            while (currentStepAmount < totalStepsAmount)
+            int segmentsMoved = 0;
+            while (segmentsMoved < segmentInfos.Count)
             {
-                if (currentStepAmount  < steps )
+                foreach (SegmentInfoInView segmentInfo in segmentInfos)
                 {
-                    currentMoveStep = _moveStepY;
-                }
-                else
-                {
-                    currentMoveStep = correctiveMoveStep;
+                    if (segmentInfo.CurrentStepAmount < segmentInfo.TotalMoveSteps)
+                    {
+                        float currentMoveStep = 0;
+                        if (segmentInfo.CurrentStepAmount < segmentInfo.MoveSteps)
+                        {
+                            currentMoveStep = _moveStepY;
+                        }
+                        else
+                        {
+                            currentMoveStep = segmentInfo.CorrectiveMoveStep;
+                        }
+                        foreach (MovingElement movingElement in segmentInfo.elements)
+                        {
+                            movingElement.Transform.anchoredPosition -= new Vector2(0, currentMoveStep);
+                        }
+
+                        segmentInfo.CurrentStepAmount++;
+                    }
+                    else if (segmentInfo.CurrentStepAmount == segmentInfo.TotalMoveSteps)
+                    {
+                        segmentsMoved++;
+                    }
                 }
 
-                foreach (Vector2Int elementCoordinate in moveInfo.oldElements)
-                {
-                    _elements[elementCoordinate.x, elementCoordinate.y].anchoredPosition -=
-                        new Vector2(0, currentMoveStep);
-                }
-                foreach (HiddenElement element in hiddenElements )
-                {
-                    
-                    element.Transform.anchoredPosition -=
-                        new Vector2(0, currentMoveStep);
-                }
-
-                currentStepAmount++;
                 yield return null;
             }
 
-            foreach (Vector2Int elementCoordinate in moveInfo.oldElements)
+            foreach (SegmentInfoInView segmentInfo in segmentInfos)
             {
-                RectTransform elementTransform = _elements[elementCoordinate.x, elementCoordinate.y];
-                int newRowPosition = elementCoordinate.y + moveInfo.moveDistance;
-                _elements[elementCoordinate.x, newRowPosition] = elementTransform;
+                foreach (MovingElement element in segmentInfo.elements)
+                {
+                    int newRowPosition = element.Coordinate.y + segmentInfo.moveDistance;
+                    _elements[element.Coordinate.x, newRowPosition] = element.Transform;
+                }
             }
            
-            foreach (HiddenElement element in hiddenElements)
-            {
-                int newRowPosition = element.Coordinate.y + moveInfo.moveDistance;
-                _elements[element.Coordinate.x, newRowPosition] = element.Transform;
-            }
-
+           
             CountMovedColumn();
         }
 
@@ -173,21 +184,39 @@ namespace MonsterQuest
 
         }
 
-        private void SpawnHiddenElements(List<NewElementInfo> newElements,out List<HiddenElement> hiddenElements)
+        private void SpawnHiddenElements(List<NewElementInfo> newElements,out List<MovingElement> hiddenElements)
         {
-            hiddenElements = new List<HiddenElement>();
+            hiddenElements = new List<MovingElement>();
             foreach (NewElementInfo newElement in newElements)
             {
                 SpawnVisualElement(newElement.coordinate.x, newElement.coordinate.y, newElement.element, out RectTransform cell);
-                HiddenElement hiddenElement = new HiddenElement(newElement.coordinate, cell);
-                hiddenElements.Add(hiddenElement);
+                MovingElement movingElement = new MovingElement(newElement.coordinate, cell);
+                hiddenElements.Add(movingElement);
             }
 
         }
-       
 
 
 
+        private List<MovingElement> GetOldElements(List<Vector2Int> coordinates)
+        {
+            List<MovingElement> oldElements = new List<MovingElement>();
+            foreach (var coord in coordinates)
+            {
+                RectTransform elementTransform = _elements[coord.x, coord.y];
+                MovingElement oldElement = new MovingElement(coord,elementTransform );
+                oldElements.Add(oldElement);
+            }
+
+            return oldElements;
+        }
+        private void CalculateMoveProperties(int moveDistance,SegmentInfoInView segmentInfo)
+        {
+            float distance = DistanceToMoveElementByY * moveDistance;
+            segmentInfo.MoveSteps =(int) (distance / _moveStepY);
+            segmentInfo.CorrectiveMoveStep = distance  - segmentInfo.MoveSteps * _moveStepY ;
+           
+        }
         private Vector3 CalculateCellPosition(int column, int row)
         {
             Vector3 newPosition =  _startPosition;
@@ -197,12 +226,23 @@ namespace MonsterQuest
         }
 
 
+        private class SegmentInfoInView
+        {
+            public int TotalMoveSteps => MoveSteps + 1;
+            public int MoveSteps { get; set; }
+            public int CurrentStepAmount { get; set; } = 0;
+            public float CorrectiveMoveStep;
+            public List<MovingElement> elements;
+            public int moveDistance;
 
-        private class HiddenElement
+
+        }
+
+        private class MovingElement
         {
             public Vector2Int Coordinate { get;  }
             public RectTransform Transform { get; }
-            public HiddenElement(Vector2Int coordinate, RectTransform transform)
+            public MovingElement(Vector2Int coordinate, RectTransform transform)
             {
                 Coordinate = coordinate;
                 Transform = transform;

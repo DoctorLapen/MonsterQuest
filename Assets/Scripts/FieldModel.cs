@@ -73,11 +73,14 @@ namespace MonsterQuest
 
         public void ShiftElements()
         {
-            Dictionary<int,ColumnMoveInfo> columnMoveInfos = FillEmptyCells();
-           AddNewElements(columnMoveInfos );
-           ElementsMoveDownArgs args = new ElementsMoveDownArgs();
-           args.columnsMoveInfos = columnMoveInfos;
-           ElementsMovedDown?.Invoke(args);
+            Dictionary<int,List<ElementMoveInfo>> oldElements = FillEmptyCells();
+            var columnMoveInfos = oldElements.ToDictionary(key => key.Key,value=> 
+                new ColumnMoveInfo(value.Value.GroupBy(s => s.moveDistance)
+                    .Select(g => new SegmentMoveInfo(g.Key,g.Select(el => el.coordinate).ToList())).ToList()));
+             AddNewElements(columnMoveInfos );
+             ElementsMoveDownArgs args = new ElementsMoveDownArgs();
+             args.columnsMoveInfos = columnMoveInfos;
+             ElementsMovedDown?.Invoke(args);
         }
 
         public bool IsElementInField(Vector2Int elementCoordinates)
@@ -133,15 +136,15 @@ namespace MonsterQuest
             }
         }
 
-        public Dictionary<int,ColumnMoveInfo> FillEmptyCells()
+        private Dictionary<int,List<ElementMoveInfo>>   FillEmptyCells()
         {
-            Dictionary<int,ColumnMoveInfo> columnMoveInfos = new  Dictionary<int,ColumnMoveInfo>();
-            ColumnMoveInfo columnMoveInfo;
+            Dictionary<int,List<ElementMoveInfo>>  oldElements = new Dictionary<int,List<ElementMoveInfo>>();
+            List<ElementMoveInfo> columnInfo;
 
 
             for (var column = 0; column < _fieldColumns; column++)
             {
-                columnMoveInfo = new ColumnMoveInfo();
+                columnInfo = new List<ElementMoveInfo>();
                
                 for (var row = _fieldRows - 2; row != -1; row--)
                 {
@@ -177,16 +180,19 @@ namespace MonsterQuest
 
                                 if (isElementMoved)
                                 {
+                                    ElementMoveInfo elementInfo = new ElementMoveInfo();
                                     if (isDownElementNotEmpty)
                                     {
-                                        columnMoveInfo.moveDistance = movingRow  - movedElement.y;
+                                        elementInfo.moveDistance = movingRow  - movedElement.y;
                                     }
                                     else if (isLastColumnElement)
                                     {
-                                        columnMoveInfo.moveDistance = movingRow + 1 - movedElement.y;
+                                        elementInfo.moveDistance = movingRow + 1 - movedElement.y;
                                     }
-                                    
-                                    columnMoveInfo.oldElements.Add(movedElement);
+
+                                  
+                                    elementInfo.coordinate = movedElement;
+                                    columnInfo.Add(elementInfo);
                                 }
 
                                 break;
@@ -196,19 +202,20 @@ namespace MonsterQuest
                     }
                 }
 
-                if (columnMoveInfo.oldElements.Count > 0)
+                if (columnInfo.Count > 0)
                 {
-                    columnMoveInfos.Add(column,columnMoveInfo);
+                    oldElements.Add(column,columnInfo);
                 }
             }
 
 
-            return columnMoveInfos;
+            return oldElements;
 
         }
 
         public void AddNewElements(Dictionary<int,ColumnMoveInfo> columnMoveInfos )
         {
+            Dictionary<int, NewElementInfo> newElements = new Dictionary<int, NewElementInfo>();
             for (int column = 0; column < _fieldColumns; column++)
             {
                 bool isAddNewColumn = false;
@@ -223,20 +230,21 @@ namespace MonsterQuest
                         newElement.element = _field[column, row].element;
                         newElement.coordinate = new Vector2Int(column, newRowCoordinate);
                         newRowCoordinate--;
-                        if (!columnMoveInfos.ContainsKey(column))
+                        if (newElements.ContainsKey(column))
                         {
                             isAddNewColumn = true;
                             ColumnMoveInfo columnMoveInfo = new ColumnMoveInfo();
                             columnMoveInfos.Add(column,columnMoveInfo);
                         }
-
-                        columnMoveInfos[column].newElements.Add(newElement);
+                           
+                        
+                        columnMoveInfos[column].newElements.elements.Add(newElement);
                     }
                 }
 
                 if (isAddNewColumn)
                 {
-                    columnMoveInfos[column].moveDistance = columnMoveInfos[column].newElements.Count;
+                    columnMoveInfos[column].newElements.MoveDistance = columnMoveInfos[column].newElements.elements.Count;
                 }
             
 
@@ -330,6 +338,12 @@ namespace MonsterQuest
             eventArgs.changeType = changeType;
             eventArgs.element = element;
             CellChanged?.Invoke(eventArgs);
+        }
+
+        private class ElementMoveInfo
+        {
+            public Vector2Int coordinate;
+            public int moveDistance;
         }
     }
 }
