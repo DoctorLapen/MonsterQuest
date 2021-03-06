@@ -130,10 +130,13 @@ namespace MonsterQuest
         private IEnumerator MoveDownColumn(List<SegmentInfoInView> segmentInfos )
         {
             int segmentsMoved = 0;
-            while (segmentsMoved < segmentInfos.Count)
+            int totalSegmentsAmount = segmentInfos.Count;
+            while (segmentsMoved < totalSegmentsAmount)
             {
-                foreach (SegmentInfoInView segmentInfo in segmentInfos)
+                int i = 0 ;
+                while (i < segmentInfos.Count)
                 {
+                    SegmentInfoInView segmentInfo = segmentInfos[i];
                     if (segmentInfo.CurrentStepAmount < segmentInfo.TotalMoveSteps)
                     {
                         float currentMoveStep = 0;
@@ -143,7 +146,7 @@ namespace MonsterQuest
                         }
                         else
                         {
-                            currentMoveStep = segmentInfo.CorrectiveMoveStep;
+                            currentMoveStep = segmentInfo.correctiveMoveStep;
                         }
                         foreach (MovingElement movingElement in segmentInfo.elements)
                         {
@@ -152,10 +155,12 @@ namespace MonsterQuest
 
                         segmentInfo.CurrentStepAmount++;
                     }
-                    else if (segmentInfo.CurrentStepAmount == segmentInfo.TotalMoveSteps)
+                    else if (segmentInfo.CurrentStepAmount == segmentInfo.TotalMoveSteps && !segmentInfo.isMoved)
                     {
                         segmentsMoved++;
+                        segmentInfo.isMoved = true;
                     }
+                    i++;
                 }
 
                 yield return null;
@@ -163,9 +168,12 @@ namespace MonsterQuest
 
             foreach (SegmentInfoInView segmentInfo in segmentInfos)
             {
+                Debug.Log($"segmentInfo.TotalAmount {segmentInfo.TotalMoveSteps}");
                 foreach (MovingElement element in segmentInfo.elements)
                 {
                     int newRowPosition = element.Coordinate.y + segmentInfo.moveDistance;
+                    Debug.Log($"segmentInfo.moveDistance {segmentInfo.moveDistance}");
+                    Debug.Log($"{element.Coordinate.x}  {newRowPosition}");
                     _elements[element.Coordinate.x, newRowPosition] = element.Transform;
                 }
             }
@@ -214,7 +222,7 @@ namespace MonsterQuest
         {
             float distance = DistanceToMoveElementByY * moveDistance;
             segmentInfo.MoveSteps =(int) (distance / _moveStepY);
-            segmentInfo.CorrectiveMoveStep = distance  - segmentInfo.MoveSteps * _moveStepY ;
+            segmentInfo.correctiveMoveStep = distance  - segmentInfo.MoveSteps * _moveStepY ;
            
         }
         private Vector3 CalculateCellPosition(int column, int row)
@@ -231,9 +239,10 @@ namespace MonsterQuest
             public int TotalMoveSteps => MoveSteps + 1;
             public int MoveSteps { get; set; }
             public int CurrentStepAmount { get; set; } = 0;
-            public float CorrectiveMoveStep;
+            public float correctiveMoveStep;
             public List<MovingElement> elements;
             public int moveDistance;
+            public bool isMoved = false;
 
 
         }

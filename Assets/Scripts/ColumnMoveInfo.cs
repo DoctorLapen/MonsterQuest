@@ -11,10 +11,12 @@ namespace MonsterQuest
         public ColumnMoveInfo()
         {
             this.oldElements = new List<SegmentMoveInfo>();
+            newElements = new NewSegmentMoveInfo();
         }
         public ColumnMoveInfo(List<SegmentMoveInfo> oldElements)
         {
             this.oldElements = oldElements;
+            newElements = new NewSegmentMoveInfo();
         }
     }
 }

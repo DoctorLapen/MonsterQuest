@@ -10,317 +10,259 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a7cedd16ee5641fda7a747369d2ba376, type: 3}
-  m_Name: Level10X10
+  m_Name: Level9X9
   m_EditorClassIdentifier: 
   _turnsForLevel: 10
   serializableField:
   - list:
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
-    - _isExist: 0
-      element: 0
-      isEmpty: 0
+      isEmpty: 1
   - list:
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
-    - _isExist: 0
-      element: 0
-      isEmpty: 0
+      isEmpty: 1
   - list:
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
-    - _isExist: 0
-      element: 0
-      isEmpty: 0
+      isEmpty: 1
   - list:
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
-    - _isExist: 0
-      element: 0
-      isEmpty: 0
+      isEmpty: 1
   - list:
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
-    - _isExist: 0
-      element: 0
-      isEmpty: 0
+      isEmpty: 1
   - list:
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
-    - _isExist: 0
-      element: 0
-      isEmpty: 0
+      isEmpty: 1
   - list:
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
-    - _isExist: 0
-      element: 0
-      isEmpty: 0
+      isEmpty: 1
   - list:
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
-    - _isExist: 0
-      element: 0
-      isEmpty: 0
+      isEmpty: 1
   - list:
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
+      isEmpty: 1
     - _isExist: 0
       element: 0
-      isEmpty: 0
-    - _isExist: 0
-      element: 0
-      isEmpty: 0
-  - list:
-    - _isExist: 0
-      element: 0
-      isEmpty: 0
-    - _isExist: 0
-      element: 0
-      isEmpty: 0
-    - _isExist: 0
-      element: 0
-      isEmpty: 0
-    - _isExist: 0
-      element: 0
-      isEmpty: 0
-    - _isExist: 0
-      element: 0
-      isEmpty: 0
-    - _isExist: 0
-      element: 0
-      isEmpty: 0
-    - _isExist: 0
-      element: 0
-      isEmpty: 0
-    - _isExist: 0
-      element: 0
-      isEmpty: 0
-    - _isExist: 0
-      element: 0
-      isEmpty: 0
-    - _isExist: 0
-      element: 0
-      isEmpty: 0
+      isEmpty: 1

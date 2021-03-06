@@ -37,34 +37,38 @@ namespace MonsterQuest
                     var cell = _field[column, row];
                     if (!cell.IsExist)
                     {
-                        var currentElement = Element.Yellow;
+                        if (cell.isEmpty)
+                        {
 
-                        if (column > 1 && row > 1)
-                        {
-                            columnPreviusElements.Add(_field[column - 2, row].element);
-                            columnPreviusElements.Add(_field[column - 1, row].element);
-                            rowPreviusElements.Add(_field[column, row - 2].element);
-                            rowPreviusElements.Add(_field[column, row - 1].element);
-                            currentElement = SelectSuitableElement(columnPreviusElements, rowPreviusElements);
+                            var currentElement = Element.Yellow;
+                            if (column > 1 && row > 1)
+                            {
+                                columnPreviusElements.Add(_field[column - 2, row].element);
+                                columnPreviusElements.Add(_field[column - 1, row].element);
+                                rowPreviusElements.Add(_field[column, row - 2].element);
+                                rowPreviusElements.Add(_field[column, row - 1].element);
+                                currentElement = SelectSuitableElement(columnPreviusElements, rowPreviusElements);
+                            }
+                            else if (column > 1)
+                            {
+                                columnPreviusElements.Add(_field[column - 2, row].element);
+                                columnPreviusElements.Add(_field[column - 1, row].element);
+                                currentElement = SelectSuitableElement(columnPreviusElements, rowPreviusElements);
+                            }
+                            else if (row > 1)
+                            {
+                                rowPreviusElements.Add(_field[column, row - 2].element);
+                                rowPreviusElements.Add(_field[column, row - 1].element);
+                                currentElement = SelectSuitableElement(columnPreviusElements, rowPreviusElements);
+                            }
+                            else
+                            {
+                                currentElement = SelectRandomElement();
+                            }
+                            cell.element = currentElement;
+                            cell.isEmpty = false;
                         }
-                        else if (column > 1)
-                        {
-                            columnPreviusElements.Add(_field[column - 2, row].element);
-                            columnPreviusElements.Add(_field[column - 1, row].element);
-                            currentElement = SelectSuitableElement(columnPreviusElements, rowPreviusElements);
-                        }
-                        else if (row > 1)
-                        {
-                            rowPreviusElements.Add(_field[column, row - 2].element);
-                            rowPreviusElements.Add(_field[column, row - 1].element);
-                            currentElement = SelectSuitableElement(columnPreviusElements, rowPreviusElements);
-                        }
-                        else
-                        {
-                            currentElement = SelectRandomElement();
-                        }
-
-                        cell.element = currentElement;
+                        
                         SendCellInfo(column, row, cell.element, ChangeType.Initialize);
                     }
                 }
@@ -215,7 +219,6 @@ namespace MonsterQuest
 
         public void AddNewElements(Dictionary<int,ColumnMoveInfo> columnMoveInfos )
         {
-            Dictionary<int, NewElementInfo> newElements = new Dictionary<int, NewElementInfo>();
             for (int column = 0; column < _fieldColumns; column++)
             {
                 bool isAddNewColumn = false;
@@ -230,7 +233,7 @@ namespace MonsterQuest
                         newElement.element = _field[column, row].element;
                         newElement.coordinate = new Vector2Int(column, newRowCoordinate);
                         newRowCoordinate--;
-                        if (newElements.ContainsKey(column))
+                        if (!columnMoveInfos.ContainsKey(column))
                         {
                             isAddNewColumn = true;
                             ColumnMoveInfo columnMoveInfo = new ColumnMoveInfo();
@@ -239,15 +242,11 @@ namespace MonsterQuest
                            
                         
                         columnMoveInfos[column].newElements.elements.Add(newElement);
+                        columnMoveInfos[column].newElements.MoveDistance++;
+
                     }
                 }
-
-                if (isAddNewColumn)
-                {
-                    columnMoveInfos[column].newElements.MoveDistance = columnMoveInfos[column].newElements.elements.Count;
-                }
-            
-
+                
                 
             }
         }
