@@ -18,6 +18,7 @@ namespace MonsterQuest
             Container.Bind<IElementsViewSettings>().FromInstance(_elementsSettings).AsSingle();
             Container.Bind<IFieldModel>().To<FieldModel>().AsSingle();
             Container.Bind<ITurnsCounter>().To<TurnsCounter>().AsSingle().WithArguments(_levelData.TurnsForLevel);
+            Container.Bind<IScoreCounter>().To<ScoreCounter>().AsSingle().WithArguments(_levelData.OneElementCost);
         }
     }
 }

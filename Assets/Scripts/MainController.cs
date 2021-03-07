@@ -20,7 +20,11 @@ namespace MonsterQuest
         [Inject]
         private ITurnsCounter _turnsCounter;
         [Inject]
+        private IScoreCounter _scoreCounter;
+        [Inject(Id = "TurnsView")]
         private ITextView _turnsView;
+        [Inject(Id = "ScoreView")]
+        private ITextView _scoreView;
         
         private bool _isFirstMatch = false;
         private bool _isColumnsMoving = false;
@@ -35,6 +39,7 @@ namespace MonsterQuest
             _fieldModel.ElementsMovedDown += _fieldView.MoveDownElements;
             _turnsView.UpdateText(_turnsCounter.Amount.ToString());
             _turnsCounter.AmountChanged += (amount) => _turnsView.UpdateText(amount.ToString());
+            _scoreCounter.ScoreChanged += (amount) => _scoreView.UpdateText(amount.ToString());
             _fieldView.ColumnsMoved += OnColumnsMoved;
             _fieldModel.InitializeField();
         }
@@ -48,6 +53,7 @@ namespace MonsterQuest
              if (_isMatchedElementsExist)
              {
                  _fieldModel.DeleteElements(matchedElements);
+                 _scoreCounter.AddScore(matchedElements);
                  _isColumnsMoving = true;
                  _fieldModel.ShiftElements();
              }
@@ -81,6 +87,7 @@ namespace MonsterQuest
                                 _isFirstMatch = true;
                                 _fieldModel.ReplaceElements(action.elementToMoveCoordinates, secondElementCoordinates);
                                 _fieldModel.DeleteElements(matchedElements);
+                                _scoreCounter.AddScore(matchedElements);
                                 _isColumnsMoving = true;
                                 _fieldModel.ShiftElements();
                             }

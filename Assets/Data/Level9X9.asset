@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Level9X9
   m_EditorClassIdentifier: 
   _turnsForLevel: 10
+  _oneLevelCost: 100
   serializableField:
   - list:
     - _isExist: 0

@@ -8,9 +8,12 @@ namespace MonsterQuest
     {
         [SerializeField]
         private int _turnsForLevel;
+        [SerializeField]
+        private int _oneLevelCost;
         public List<CellList> serializableField = new List<CellList>();
         public Cell[,] Field { get; private set; }
         public int TurnsForLevel => _turnsForLevel;
+        public int OneElementCost => _oneLevelCost;
 
         private void OnEnable()
         {
