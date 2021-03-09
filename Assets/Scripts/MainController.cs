@@ -25,10 +25,15 @@ namespace MonsterQuest
         private ITextView _turnsView;
         [Inject(Id = "ScoreView")]
         private ITextView _scoreView;
+        [Inject]
+        private IScoreSaver _scoreSaver;
+        [Inject]
+        private IGameOverMenu _gameOverMenu;
         
         private bool _isFirstMatch = false;
         private bool _isColumnsMoving = false;
         private bool _isMatchedElementsExist = true;
+        private bool _isGameOver = false;
 
         
 
@@ -57,6 +62,10 @@ namespace MonsterQuest
                  _isColumnsMoving = true;
                  _fieldModel.ShiftElements();
              }
+             else if(_turnsCounter.IsTurnsOver)
+             {
+                 StartGameOver();
+             }
          }
 
          private void OnElementsReplaced(ElementsReplacedArgs args)
@@ -64,50 +73,56 @@ namespace MonsterQuest
             _fieldView.ReplaceVisualElements(args.elementA.x,args.elementA.y,args.elementB.x,args.elementB.y);
         }
 
-        private void Update()
+         private void Update()
+         {
+             if (!_isGameOver)
+             {
+                 if (!_isColumnsMoving)
+                 {
+                     var action = _inputController.DetectAction();
+                     if (action.isActionHappened)
+                     {
+                         var secondElementCoordinates = action.elementToMoveCoordinates + action.moveDirection;
+                         if (_fieldModel.IsElementInField(secondElementCoordinates))
+                         {
+                             var matchedElements = _fieldModel.FindMatchedElements(action.elementToMoveCoordinates,
+                                 secondElementCoordinates);
+                             _isMatchedElementsExist = matchedElements.Count > 0;
+                             if (_isMatchedElementsExist)
+                             {
+                                 _isFirstMatch = true;
+                                 _fieldModel.ReplaceElements(action.elementToMoveCoordinates, secondElementCoordinates);
+                                 _fieldModel.DeleteElements(matchedElements);
+                                 _scoreCounter.AddScore(matchedElements);
+                                 _isColumnsMoving = true;
+                                 _fieldModel.ShiftElements();
+                             }
+
+                             if (_isFirstMatch)
+                             {
+                                 _turnsCounter.СountTurn();
+                                 _isFirstMatch = false;
+                             }
+                         }
+                     }
+                 }
+             }
+         }
+        private void StartGameOver()
         {
-            if (!_turnsCounter.IsTurnsOver)
+            _isGameOver = true;
+            _gameOverMenu.ShowMenu();
+             ScoreAmount recordData = _scoreSaver.Load();
+             ScoreAmount scoreData = _scoreCounter.SaveData;
+            
+            if(scoreData.score > recordData.score)
             {
-                
-                if (!_isColumnsMoving)
-                {
-                    ActionData action = _inputController.DetectAction();
-                    if (action.isActionHappened)
-                    {
-
-                        Vector2Int secondElementCoordinates = action.elementToMoveCoordinates + action.moveDirection;
-                        if (_fieldModel.IsElementInField(secondElementCoordinates))
-                        {
-                            HashSet<Vector2Int> matchedElements =
-                                _fieldModel.FindMatchedElements(action.elementToMoveCoordinates,
-                                    secondElementCoordinates);
-                            _isMatchedElementsExist = matchedElements.Count > 0;
-                            if (_isMatchedElementsExist)
-                            {
-                                _isFirstMatch = true;
-                                _fieldModel.ReplaceElements(action.elementToMoveCoordinates, secondElementCoordinates);
-                                _fieldModel.DeleteElements(matchedElements);
-                                _scoreCounter.AddScore(matchedElements);
-                                _isColumnsMoving = true;
-                                _fieldModel.ShiftElements();
-                            }
-
-                            if (_isFirstMatch)
-                            {
-                                _turnsCounter.СountTurn();
-                                _isFirstMatch = false;
-                            }
-                        }
-
-
-
-                    }
-                }
-
+                _scoreSaver.Save(scoreData);
+                _gameOverMenu.ChangeScore(scoreData.score,scoreData.score,true);
             }
             else
             {
-                Debug.Log("GameOver");
+                _gameOverMenu.ChangeScore( scoreData.score,recordData.score,false);
             }
         }
 

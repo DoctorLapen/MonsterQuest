@@ -10,6 +10,11 @@ namespace MonsterQuest
         [SerializeField]
         private ElementsViewSettings _elementsSettings;
 
+        [SerializeField]
+        private string _saveXmlFileName;
+
+        
+
         
 
         public override void InstallBindings()
@@ -19,6 +24,7 @@ namespace MonsterQuest
             Container.Bind<IFieldModel>().To<FieldModel>().AsSingle();
             Container.Bind<ITurnsCounter>().To<TurnsCounter>().AsSingle().WithArguments(_levelData.TurnsForLevel);
             Container.Bind<IScoreCounter>().To<ScoreCounter>().AsSingle().WithArguments(_levelData.OneElementCost);
+            Container.Bind<IScoreSaver>().To<ScoreSaverXml>().AsSingle().WithArguments(_saveXmlFileName);
         }
     }
 }
