@@ -17,8 +17,23 @@ namespace MonsterQuest
 
         private void OnLogin(LoginInfo info)
         {
-            var request = new RegisterPlayFabUserRequest(){DisplayName = info.userName,Password =info.password,Email = info.email};
-            PlayFabClientAPI.RegisterPlayFabUser(request,OnRegisterSuccess,OnRegisterFailure);
+            if (info.type == LoginType.SignUp)
+            {
+                var request = new RegisterPlayFabUserRequest()
+                    {DisplayName = info.userName, Password = info.password, Email = info.email, Username = info.userName };
+                PlayFabClientAPI.RegisterPlayFabUser(request, OnSignUpSuccess, OnRegisterFailure);
+            }
+            else if(info.type == LoginType.SignIn)
+            {
+                LoginWithEmailAddressRequest request = new LoginWithEmailAddressRequest()
+                    {Password = info.password, Email = info.email};
+                PlayFabClientAPI.LoginWithEmailAddress(request, OnSignInSuccess, OnRegisterFailure);
+            }
+        }
+
+        private void OnSignInSuccess(LoginResult result)
+        {
+            Debug.Log("Login");
         }
 
         private void OnRegisterFailure(PlayFabError obj)
@@ -26,7 +41,7 @@ namespace MonsterQuest
             Debug.LogError(obj.GenerateErrorReport());
         }
 
-        private void OnRegisterSuccess(RegisterPlayFabUserResult result)
+        private void OnSignUpSuccess(RegisterPlayFabUserResult result)
         {
             Debug.Log("register");
         }
