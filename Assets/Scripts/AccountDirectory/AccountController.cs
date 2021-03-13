@@ -28,6 +28,7 @@ namespace MonsterQuest
                 LoginWithEmailAddressRequest request = new LoginWithEmailAddressRequest()
                     {Password = info.password, Email = info.email};
                 PlayFabClientAPI.LoginWithEmailAddress(request, OnSignInSuccess, OnRegisterFailure);
+                
             }
         }
 
