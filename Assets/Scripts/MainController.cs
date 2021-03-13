@@ -29,6 +29,8 @@ namespace MonsterQuest
         private IScoreSaver _scoreSaver;
         [Inject]
         private IGameOverMenu _gameOverMenu;
+        [Inject]
+        private ILeaderboardController _leaderboardController;
         
         private bool _isFirstMatch = false;
         private bool _isColumnsMoving = false;
@@ -114,11 +116,12 @@ namespace MonsterQuest
             _gameOverMenu.ShowMenu();
              ScoreAmount recordData = _scoreSaver.Load();
              ScoreAmount scoreData = _scoreCounter.SaveData;
-            
+             _leaderboardController.SendScore(scoreData.score);
             if(scoreData.score > recordData.score)
             {
                 _scoreSaver.Save(scoreData);
                 _gameOverMenu.ChangeScore(scoreData.score,scoreData.score,true);
+
             }
             else
             {

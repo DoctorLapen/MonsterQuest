@@ -8,6 +8,8 @@ namespace MonsterQuest
     {
         [SerializeField]
         private RectTransform _menuPane;
+        [SerializeField]
+        private RectTransform _leaderboardPane;
 
 
         [SerializeField]
@@ -34,11 +36,16 @@ namespace MonsterQuest
         public void ChangeScore(int score, int record, bool isNewRecord)
         {
             _scoreText.text = $"{_scoreLabel} {score}";
-            _recordText.text = $"{_recordLabel} {score}";
+            _recordText.text = $"{_recordLabel} {record}";
             if (isNewRecord)
             {
                 _newRecordText.gameObject.SetActive(true);
             }
+        }
+
+        public void ShowLeaderboard()
+        {
+            _leaderboardPane.gameObject.SetActive(true);
         }
 
         public void Restart()

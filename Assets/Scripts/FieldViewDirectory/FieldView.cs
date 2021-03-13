@@ -168,12 +168,9 @@ namespace MonsterQuest
 
             foreach (SegmentInfoInView segmentInfo in segmentInfos)
             {
-                Debug.Log($"segmentInfo.TotalAmount {segmentInfo.TotalMoveSteps}");
                 foreach (MovingElement element in segmentInfo.elements)
                 {
                     int newRowPosition = element.Coordinate.y + segmentInfo.moveDistance;
-                    Debug.Log($"segmentInfo.moveDistance {segmentInfo.moveDistance}");
-                    Debug.Log($"{element.Coordinate.x}  {newRowPosition}");
                     _elements[element.Coordinate.x, newRowPosition] = element.Transform;
                 }
             }

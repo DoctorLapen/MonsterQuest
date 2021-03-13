@@ -14,6 +14,7 @@ namespace MonsterQuest
         {
             _xmlSerializer = new XmlSerializer(typeof(ScoreAmount));
             _path = Path.Combine(Application.persistentDataPath, fileName);
+            Debug.Log(_path);
         }
 
         public void Save(ScoreAmount score)
