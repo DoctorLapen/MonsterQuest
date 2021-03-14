@@ -79,9 +79,10 @@ namespace MonsterQuest
             Debug.Log("Login");
         }
 
-        private void OnAuthFailure(PlayFabError obj)
+        private void OnAuthFailure(PlayFabError error)
         {
-            Debug.LogError(obj.GenerateErrorReport());
+            Debug.LogError(error.GenerateErrorReport());
+            _registerView.SetErrorText(error.ErrorMessage);
         }
 
         private void OnSignUpSuccess(RegisterPlayFabUserResult result)

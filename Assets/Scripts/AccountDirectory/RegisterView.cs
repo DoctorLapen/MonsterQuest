@@ -24,6 +24,11 @@ namespace MonsterQuest
         [SerializeField]
         private Toggle _RememberMeToggle;
 
+        [SerializeField]
+        private Text _errorText;
+
+        
+
         
         
         
@@ -49,6 +54,11 @@ namespace MonsterQuest
                             isRememberMe = _RememberMeToggle.isOn,
                             
                         });
+                    SetErrorText("");
+                }
+                else if (_passwordField.text != _confirmPasswordField.text && _mode == LoginType.SignUp)
+                {
+                    SetErrorText("passwords must match");
                 }
                 else if (_mode == LoginType.SignIn)
                 {
@@ -57,6 +67,7 @@ namespace MonsterQuest
                         email = _emailField.text, password = _passwordField.text,type = _mode,
                         isRememberMe = _RememberMeToggle.isOn,
                     });
+                    SetErrorText("");
                 }
             
             
@@ -76,6 +87,11 @@ namespace MonsterQuest
             _confirmPasswordField.gameObject.SetActive(true);
             _mode = LoginType.SignUp;
             _submitTextButton.text = "Sign Up";
+        }
+
+        public void SetErrorText(string text)
+        {
+            _errorText.text = text;
         }
 
 
