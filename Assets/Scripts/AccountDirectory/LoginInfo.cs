@@ -6,6 +6,7 @@
         public string email;
         public string password;
         public LoginType type;
+        public bool isRememberMe;
 
     }
 

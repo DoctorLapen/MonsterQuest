@@ -465,6 +465,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _anonymousPrefsKey: anonym
+  _rememberMeSettings: {fileID: 11400000, guid: 2e75f083f47d7014c982a17cad30b6fd, type: 2}
 --- !u!1 &775303370
 GameObject:
   m_ObjectHideFlags: 0

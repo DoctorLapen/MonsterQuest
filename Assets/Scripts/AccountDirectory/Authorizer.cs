@@ -9,11 +9,14 @@ namespace MonsterQuest
     {
         [SerializeField]
         private string _anonymousPrefsKey;
+        [SerializeField]
+        private RememberMeSettings _rememberMeSettings;
 
         private void Start()
         {
             string anonymousCustomId = String.Empty;
             bool anonymousKeyExist = PlayerPrefs.HasKey(_anonymousPrefsKey);
+            
             if (anonymousKeyExist)
             { 
                 anonymousCustomId = PlayerPrefs.GetString(_anonymousPrefsKey);

@@ -20,6 +20,11 @@ namespace MonsterQuest
         private InputField _confirmPasswordField;
         [SerializeField]
         private Text _submitTextButton;
+
+        [SerializeField]
+        private Toggle _RememberMeToggle;
+
+        
         
         
         
@@ -37,12 +42,21 @@ namespace MonsterQuest
                 if (_passwordField.text == _confirmPasswordField.text && _mode == LoginType.SignUp)
                 {
                     Login?.Invoke(new LoginInfo()
-                        {email = _emailField.text, userName = _userNameField.text, password = _passwordField.text,type = _mode});
+                        {email = _emailField.text,
+                            userName = _userNameField.text,
+                            password = _passwordField.text,
+                            type = _mode,
+                            isRememberMe = _RememberMeToggle.isOn,
+                            
+                        });
                 }
                 else if (_mode == LoginType.SignIn)
                 {
                     Login?.Invoke(new LoginInfo()
-                        {email = _emailField.text, password = _passwordField.text,type = _mode});
+                    {
+                        email = _emailField.text, password = _passwordField.text,type = _mode,
+                        isRememberMe = _RememberMeToggle.isOn,
+                    });
                 }
             
             
