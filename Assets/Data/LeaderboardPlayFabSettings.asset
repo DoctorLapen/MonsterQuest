@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _statisticName: HighScore
   _startPosition: 0
-  _maxResultCount: 10
+  _maxResultCount: 100
