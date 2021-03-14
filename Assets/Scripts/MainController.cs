@@ -116,7 +116,7 @@ namespace MonsterQuest
             _gameOverMenu.ShowMenu();
              ScoreAmount recordData = _scoreSaver.Load();
              ScoreAmount scoreData = _scoreCounter.SaveData;
-             if (CurrentAuth.auth != AuthType.Anonymous)
+             if (CurrentAuth.type != AuthType.Anonymous)
              {
                  _leaderboardController.SendScore(scoreData.score);
              }

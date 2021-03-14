@@ -1,4 +1,5 @@
-﻿using UnityEditor.U2D;
+﻿using System;
+using UnityEditor.U2D;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,13 +7,13 @@ namespace MonsterQuest
 {
     public class AccountInfoView : MonoBehaviour, IAccountInfoView
     {
+        public event Action Logout;
         [SerializeField]
         private Text _playerNameText;
 
         [SerializeField]
         private string _playerNameLabel;
-        [SerializeField]
-        private RememberMeSettings _rememberMeSettings;
+       
 
         
 
@@ -22,9 +23,10 @@ namespace MonsterQuest
             gameObject.SetActive(true);
             _playerNameText.text = $"{_playerNameLabel}:\n{playerName}";
         }
-        public void ChangePlayer()
+        public void ExitAccount()
         {
             gameObject.SetActive(false);
+            Logout?.Invoke();
         }
     }
 }

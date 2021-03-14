@@ -12,5 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7e45bf990e54a2985e283741138b5cd, type: 3}
   m_Name: RememberMeSettings
   m_EditorClassIdentifier: 
-  _rememberMeIdKey: RememberId
-  _isRememberMeKey: isRemember
+  _rememberMeFileName: Remember.xml

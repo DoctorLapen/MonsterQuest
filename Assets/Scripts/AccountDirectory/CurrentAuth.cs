@@ -2,6 +2,7 @@
 {
     public static  class CurrentAuth
     {
-        public static AuthType auth;
+        public static AuthType type;
+        public static string playerDisplayName = "";
     }
 }

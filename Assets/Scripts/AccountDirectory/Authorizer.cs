@@ -2,37 +2,46 @@
 using PlayFab;
 using PlayFab.ClientModels;
 using UnityEngine;
+using Zenject;
 
 namespace MonsterQuest
 {
     public class Authorizer : MonoBehaviour
     {
+        [Inject]
+        private IRememberMeSaver _rememberMeSaver;
         [SerializeField]
         private string _anonymousPrefsKey;
-        [SerializeField]
-        private RememberMeSettings _rememberMeSettings;
+        
 
         private void Start()
         {
-            string anonymousCustomId = String.Empty;
+            string customId = String.Empty;
             bool anonymousKeyExist = PlayerPrefs.HasKey(_anonymousPrefsKey);
-            
-            if (anonymousKeyExist)
+            RememberMeInfo rememberMeInfo = _rememberMeSaver.Load();
+            if (rememberMeInfo.isRememberMe)
+            {
+                customId = rememberMeInfo.customId;
+                CurrentAuth.type = AuthType.Login;
+                CurrentAuth.playerDisplayName = rememberMeInfo.playerName;
+            }
+
+            else if (anonymousKeyExist)
             { 
-                anonymousCustomId = PlayerPrefs.GetString(_anonymousPrefsKey);
-               CurrentAuth.auth = AuthType.Anonymous;
+                customId = PlayerPrefs.GetString(_anonymousPrefsKey);
+               CurrentAuth.type = AuthType.Anonymous;
               
             }
             else if(!anonymousKeyExist)
             {
-                CurrentAuth.auth = AuthType.Anonymous;
-                anonymousCustomId = Guid.NewGuid().ToString();
-                PlayerPrefs.SetString(_anonymousPrefsKey,anonymousCustomId);
+                CurrentAuth.type = AuthType.Anonymous;
+                customId = Guid.NewGuid().ToString();
+                PlayerPrefs.SetString(_anonymousPrefsKey,customId);
                 PlayerPrefs.Save();
             }
             LoginWithCustomIDRequest request = new LoginWithCustomIDRequest()
             {
-                CustomId = anonymousCustomId,
+                CustomId = customId,
                 CreateAccount = true,
             };
             PlayFabClientAPI.LoginWithCustomID(request,OnLoginSuccess,OnLoginFailure);
