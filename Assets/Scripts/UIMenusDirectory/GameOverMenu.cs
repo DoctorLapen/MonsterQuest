@@ -1,11 +1,14 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Zenject;
 
 namespace MonsterQuest
 {
     public class GameOverMenu : Menu, IGameOverMenu
     {
+        [Inject]
+        private ILeaderboardController _leaderboardController;
         [SerializeField]
         private RectTransform _menuPane;
         [SerializeField]
@@ -46,6 +49,7 @@ namespace MonsterQuest
         public void ShowLeaderboard()
         {
             _leaderboardPane.gameObject.SetActive(true);
+            _leaderboardController.ShowLeaderboard();
         }
 
         public void Restart()

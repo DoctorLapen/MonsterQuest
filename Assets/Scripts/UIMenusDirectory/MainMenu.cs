@@ -1,12 +1,15 @@
-﻿using System;
-using UnityEditor;
+﻿
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Zenject;
 
 namespace MonsterQuest
 {
     public class MainMenu : Menu
     {
+        [Inject]
+        private ILeaderboardController _leaderboardController;
+           
         [SerializeField]
         private RectTransform _leaderboardPane;
 
@@ -19,6 +22,7 @@ namespace MonsterQuest
         public void OpenLeaderboard()
         {
             _leaderboardPane.gameObject.SetActive(true);
+            _leaderboardController.ShowLeaderboard();
         }
 
         public void OpenPlayerAccount()

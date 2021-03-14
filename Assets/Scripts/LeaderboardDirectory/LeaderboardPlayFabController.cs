@@ -22,10 +22,7 @@ namespace MonsterQuest
             _leaderboardView.UpdateBoard += ShowLeaderboard;
         }
 
-        private void OnEnable()
-        {
-            ShowLeaderboard();
-        }
+       
 
         public void SendScore(int score)
         {
